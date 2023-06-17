@@ -1,9 +1,103 @@
 {
+  "AnimationSprite|2023-05-27T09:17:58.512Z|66417": {
+    "ƒ.AnimationSprite": {
+      "idResource": "AnimationSprite|2023-05-27T09:17:58.512Z|66417",
+      "idTexture": "TextureImage|2023-05-27T09:19:34.390Z|68384",
+      "frames": 4,
+      "wrapAfter": 5,
+      "start": "[0, 3]",
+      "size": "[214, 383]",
+      "next": "[448, 0]",
+      "wrap": "[0, 80]",
+      "Animation": {
+        "idResource": "AnimationSprite|2023-05-27T09:17:58.512Z|66417",
+        "name": "fall",
+        "labels": {},
+        "events": {},
+        "framesPerSecond": 3.9999999999999996,
+        "animationStructure": {}
+      }
+    }
+  },
+  "TextureImage|2023-05-27T09:19:34.390Z|68384": {
+    "ƒ.TextureImage": {
+      "url": "Resoources\\fall.png",
+      "type": "TextureImage",
+      "Texture": {
+        "idResource": "TextureImage|2023-05-27T09:19:34.390Z|68384",
+        "name": "Resoources\\fall.png",
+        "mipmap": "CRISP"
+      }
+    }
+  },
+  "MeshSprite|2023-05-27T10:07:05.502Z|82330": {
+    "ƒ.MeshSprite": {
+      "idResource": "MeshSprite|2023-05-27T10:07:05.502Z|82330",
+      "name": "MeshSprite",
+      "type": "MeshSprite"
+    }
+  },
+  "Material|2023-05-27T09:27:31.685Z|55131": {
+    "ƒ.Material": {
+      "name": "ShaderFlat",
+      "idResource": "Material|2023-05-27T09:27:31.685Z|55131",
+      "shader": "ShaderFlat",
+      "coat": {
+        "ƒ.CoatRemissive": {
+          "color": "[1, 1, 1, 1]",
+          "diffuse": 1,
+          "specular": 0
+        }
+      }
+    }
+  },
+  "Material|2023-06-14T11:49:10.532Z|55153": {
+    "ƒ.Material": {
+      "name": "fall",
+      "idResource": "Material|2023-06-14T11:49:10.532Z|55153",
+      "shader": "ShaderFlatTextured",
+      "coat": {
+        "ƒ.CoatRemissiveTextured": {
+          "color": "[1, 1, 1, 1]",
+          "idTexture": "TextureImage|2023-05-27T09:19:34.390Z|68384",
+          "diffuse": 1,
+          "specular": 0
+        }
+      }
+    }
+  },
   "Graph|2023-05-27T09:17:41.651Z|12920": {
     "ƒ.Graph": {
       "name": "Game",
       "active": true,
-      "components": {},
+      "components": {
+        "ComponentFaceCamera": [],
+        "ComponentCamera": [
+          {
+            "ƒ.ComponentCamera": {
+              "backgroundColor": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "backgroundEnabled": true,
+              "projection": "central",
+              "fieldOfView": 45,
+              "direction": "diagonal",
+              "aspect": 1,
+              "pivot": {
+                "translation": "[0, 0, 10]",
+                "rotation": "[0, 0, 0]",
+                "scaling": "[1, 1, 1]"
+              },
+              "Component": {
+                "active": true
+              }
+            }
+          }
+        ]
+      },
       "children": [
         {
           "ƒ.Node": {
@@ -16,7 +110,7 @@
                     "local": {
                       "translation": "[0, 0, 0]",
                       "rotation": "[0, 0, 0]",
-                      "scaling": "[1, 1, 1]"
+                      "scaling": "[0.5999999046325684, 1, 1]"
                     },
                     "Component": {
                       "active": true
@@ -48,7 +142,8 @@
                     }
                   }
                 }
-              ]
+              ],
+              "ComponentCamera": []
             },
             "children": [
               {
@@ -64,10 +159,10 @@
                           },
                           "idAnimation": "AnimationSprite|2023-05-27T09:17:58.512Z|66417",
                           "playmode": "loop",
-                          "quantization": "continous",
+                          "quantization": "discrete",
                           "scale": 1,
                           "scaleWithGameTime": true,
-                          "animateInEditor": false
+                          "animateInEditor": true
                         }
                       }
                     ],
@@ -107,14 +202,14 @@
                           "clrPrimary": "[1, 1, 1, 1]",
                           "clrSecondary": "[1, 1, 1, 1]",
                           "pivot": {
-                            "translation": "[0, 0]",
+                            "translation": "[0.863198459148407, 0.007792207878082991]",
                             "rotation": 0,
-                            "scaling": "[1, 1]"
+                            "scaling": "[0.13744379580020905, 0.9948052167892456]"
                           },
                           "Component": {
                             "active": true
                           },
-                          "idMaterial": "Material|2023-05-27T09:27:31.685Z|55131"
+                          "idMaterial": "Material|2023-06-14T11:49:10.532Z|55153"
                         }
                       }
                     ]
@@ -124,9 +219,29 @@
               },
               {
                 "ƒ.Node": {
-                  "name": "Camera",
+                  "name": "Light",
                   "active": true,
-                  "components": {},
+                  "components": {
+                    "ComponentLight": [
+                      {
+                        "ƒ.ComponentLight": {
+                          "pivot": {
+                            "translation": "[1, 1, 0]",
+                            "rotation": "[0, 0, 0]",
+                            "scaling": "[0, 0, 0]"
+                          },
+                          "light": {
+                            "ƒ.LightAmbient": {
+                              "color": "[1, 1, 1, 1]"
+                            }
+                          },
+                          "Component": {
+                            "active": true
+                          }
+                        }
+                      }
+                    ]
+                  },
                   "children": []
                 }
               }
@@ -179,47 +294,6 @@
       "type": "Graph"
     }
   },
-  "AnimationSprite|2023-05-27T09:17:58.512Z|66417": {
-    "ƒ.AnimationSprite": {
-      "idResource": "AnimationSprite|2023-05-27T09:17:58.512Z|66417",
-      "idTexture": "TextureImage|2023-05-27T09:19:34.390Z|68384",
-      "frames": 4,
-      "wrapAfter": 5,
-      "start": "[0, 3]",
-      "size": "[214, 383]",
-      "next": "[448, 0]",
-      "wrap": "[0, 80]",
-      "Animation": {
-        "idResource": "AnimationSprite|2023-05-27T09:17:58.512Z|66417",
-        "name": "fall",
-        "labels": {},
-        "events": {},
-        "framesPerSecond": 25,
-        "animationStructure": {}
-      }
-    }
-  },
-  "TextureImage|2023-05-27T09:19:34.390Z|68384": {
-    "ƒ.TextureImage": {
-      "url": "Resoources\\fall.png",
-      "type": "TextureImage",
-      "Texture": {
-        "idResource": "TextureImage|2023-05-27T09:19:34.390Z|68384",
-        "name": "Resoources\\fall.png",
-        "mipmap": "CRISP"
-      }
-    }
-  },
-  "TextureImage|2023-05-27T09:19:37.150Z|07287": {
-    "ƒ.TextureImage": {
-      "type": "TextureImage",
-      "Texture": {
-        "idResource": "TextureImage|2023-05-27T09:19:37.150Z|07287",
-        "name": "Resoources\\fly.png",
-        "mipmap": "CRISP"
-      }
-    }
-  },
   "MeshSphere|2023-05-27T09:26:34.973Z|58184": {
     "ƒ.MeshSphere": {
       "idResource": "MeshSphere|2023-05-27T09:26:34.973Z|58184",
@@ -229,31 +303,21 @@
       "latitudes": 8
     }
   },
-  "Material|2023-05-27T09:27:31.685Z|55131": {
-    "ƒ.Material": {
-      "name": "ShaderFlat",
-      "idResource": "Material|2023-05-27T09:27:31.685Z|55131",
-      "shader": "ShaderFlat",
-      "coat": {
-        "ƒ.CoatRemissive": {
-          "color": "[1, 1, 1, 1]",
-          "diffuse": 1,
-          "specular": 0
-        }
-      }
-    }
-  },
   "MeshQuad|2023-05-27T09:31:38.987Z|07452": {
     "ƒ.MeshQuad": {
       "idResource": "MeshQuad|2023-05-27T09:31:38.987Z|07452",
       "name": "MeshQuad"
     }
   },
-  "MeshSprite|2023-05-27T10:07:05.502Z|82330": {
-    "ƒ.MeshSprite": {
-      "idResource": "MeshSprite|2023-05-27T10:07:05.502Z|82330",
-      "name": "MeshSprite",
-      "type": "MeshSprite"
+  "TextureImage|2023-06-12T14:35:29.659Z|03574": {
+    "ƒ.TextureImage": {
+      "url": "Resoources\\fly.png",
+      "type": "TextureImage",
+      "Texture": {
+        "idResource": "TextureImage|2023-06-12T14:35:29.659Z|03574",
+        "name": "Resoources\\fly.png",
+        "mipmap": "CRISP"
+      }
     }
   }
 }
