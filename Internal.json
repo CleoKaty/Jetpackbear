@@ -71,7 +71,6 @@
       "name": "Game",
       "active": true,
       "components": {
-        "ComponentFaceCamera": [],
         "ComponentCamera": [
           {
             "ƒ.ComponentCamera": {
@@ -88,7 +87,7 @@
               "aspect": 1,
               "pivot": {
                 "translation": "[0, 0, 10]",
-                "rotation": "[0, 0, 0]",
+                "rotation": "[0, 180, 0]",
                 "scaling": "[1, 1, 1]"
               },
               "Component": {
@@ -142,8 +141,7 @@
                     }
                   }
                 }
-              ],
-              "ComponentCamera": []
+              ]
             },
             "children": [
               {
@@ -202,7 +200,7 @@
                           "clrPrimary": "[1, 1, 1, 1]",
                           "clrSecondary": "[1, 1, 1, 1]",
                           "pivot": {
-                            "translation": "[0.863198459148407, 0.007792207878082991]",
+                            "translation": "[0.2877328097820282, 0.007792207878082991]",
                             "rotation": 0,
                             "scaling": "[0.13744379580020905, 0.9948052167892456]"
                           },

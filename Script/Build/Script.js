@@ -52,29 +52,49 @@ var Script;
         keywords["l"] = "l";
     })(keywords || (keywords = {}));
     document.addEventListener("interactiveViewportStarted", start);
-    async function start(_event) {
-        //fetch config
+    async function configGrap(_event) {
         let response = await fetch("config.json");
         config = await response.json();
         console.log(config);
         console.log(keywords);
+    }
+    ;
+    async function start(_event) {
+        //fetch config
+        await configGrap;
         //start loop
         ƒ.Loop.addEventListener("loopFrame" /* ƒ.EVENT.LOOP_FRAME */, update);
         ƒ.Loop.start(); // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
         //set up viewport
-        //viewport = (<CustomEvent>_event).detail;
-        // viewport.physicsDebugMode = ƒ.PHYSICS_DEBUGMODE.COLLIDERS;
-        // viewport.canvas.addEventListener("contextmenu", _event => _event.preventDefault());
-        //declare variables
+        viewport = _event.detail;
         graph = viewport.getBranch();
-        character = graph.getChildrenByName("Character")[0];
-        cmpCamera = character.getComponent(ƒ.ComponentCamera);
+        ƒ.AudioManager.default.listenWith(graph.getComponent(ƒ.ComponentAudioListener));
+        ƒ.AudioManager.default.listenTo(graph);
+        cmpCamera = graph.getComponent(ƒ.ComponentCamera);
         viewport.camera = cmpCamera;
     }
     function update(_event) {
         // ƒ.Physics.simulate();  // if physics is included and used
+        ƒ.Physics.simulate();
         viewport.draw();
         ƒ.AudioManager.default.update();
+        setupChar();
+        fly();
+    }
+    function fly() {
+        let cmpRigidbody = character.getComponent(ƒ.ComponentRigidbody);
+        if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.SPACE])) {
+            cmpRigidbody.addVelocity(ƒ.Vector3.Y(5));
+            console.log("fly");
+        }
+    }
+    function setupChar() {
+        // console.log(ƒ.Physics.settings.sleepingAngularVelocityThreshold);
+        character = viewport.getBranch().getChildrenByName("Character")[0];
+        viewport.camera = character.getChild(0).getComponent(ƒ.ComponentCamera);
+        let cmpRigidbody = character.getComponent(ƒ.ComponentRigidbody);
+        cmpRigidbody.effectRotation = ƒ.Vector3.Y();
+        //cmpRigidbody.addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, steveCollides);
     }
 })(Script || (Script = {}));
 // namespace Script{
