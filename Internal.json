@@ -2,11 +2,11 @@
   "AnimationSprite|2023-05-27T09:17:58.512Z|66417": {
     "ƒ.AnimationSprite": {
       "idResource": "AnimationSprite|2023-05-27T09:17:58.512Z|66417",
-      "idTexture": "TextureImage|2023-05-27T09:19:34.390Z|68384",
+      "idTexture": "TextureImage|2023-06-26T14:49:41.585Z|38092",
       "frames": 4,
-      "wrapAfter": 5,
+      "wrapAfter": 4,
       "start": "[0, 3]",
-      "size": "[214, 383]",
+      "size": "[254, 387]",
       "next": "[448, 0]",
       "wrap": "[0, 80]",
       "Animation": {
@@ -53,13 +53,13 @@
   },
   "Material|2023-06-14T11:49:10.532Z|55153": {
     "ƒ.Material": {
-      "name": "fall",
+      "name": "fallpic",
       "idResource": "Material|2023-06-14T11:49:10.532Z|55153",
       "shader": "ShaderFlatTextured",
       "coat": {
         "ƒ.CoatRemissiveTextured": {
           "color": "[1, 1, 1, 1]",
-          "idTexture": "TextureImage|2023-05-27T09:19:34.390Z|68384",
+          "idTexture": "TextureImage|2023-06-26T14:49:41.585Z|38092",
           "diffuse": 1,
           "specular": 0
         }
@@ -155,7 +155,7 @@
                           "Component": {
                             "active": true
                           },
-                          "idAnimation": "AnimationSprite|2023-05-27T09:17:58.512Z|66417",
+                          "idAnimation": "AnimationSprite|2023-06-26T15:10:06.385Z|40063",
                           "playmode": "loop",
                           "quantization": "discrete",
                           "scale": 1,
@@ -200,9 +200,9 @@
                           "clrPrimary": "[1, 1, 1, 1]",
                           "clrSecondary": "[1, 1, 1, 1]",
                           "pivot": {
-                            "translation": "[0.2877328097820282, 0.007792207878082991]",
+                            "translation": "[0.5414091348648071, 0.5012531280517578]",
                             "rotation": 0,
-                            "scaling": "[0.13744379580020905, 0.9948052167892456]"
+                            "scaling": "[0.1817058026790619, 0.4849624037742615]"
                           },
                           "Component": {
                             "active": true
@@ -284,7 +284,170 @@
             "name": "Background",
             "active": true,
             "components": {},
-            "children": []
+            "children": [
+              {
+                "ƒ.Node": {
+                  "name": "Upsi",
+                  "active": true,
+                  "components": {
+                    "ComponentMesh": [
+                      {
+                        "ƒ.ComponentMesh": {
+                          "idMesh": "MeshCube|2023-06-26T13:56:14.618Z|27173",
+                          "pivot": {
+                            "translation": "[0, 0, 0]",
+                            "rotation": "[0, 0, 0]",
+                            "scaling": "[1, 1, 1]"
+                          },
+                          "Component": {
+                            "active": true
+                          }
+                        }
+                      }
+                    ],
+                    "ComponentTransform": [
+                      {
+                        "ƒ.ComponentTransform": {
+                          "local": {
+                            "translation": "[0, 3, 0]",
+                            "rotation": "[0, 0, 0]",
+                            "scaling": "[8, 0.30000001192092896, 1]"
+                          },
+                          "Component": {
+                            "active": true
+                          }
+                        }
+                      }
+                    ],
+                    "ComponentRigidbody": [
+                      {
+                        "ƒ.ComponentRigidbody": {
+                          "initialization": "TO_PIVOT",
+                          "friction": 0.2,
+                          "restitution": 0.2,
+                          "mass": 1,
+                          "dampTranslation": 0.1,
+                          "dampRotation": 0.1,
+                          "effectGravity": 1,
+                          "typeBody": "STATIC",
+                          "typeCollider": "CUBE",
+                          "isTrigger": false,
+                          "id": 1,
+                          "pivot": {
+                            "translation": "[0, 0, 0]",
+                            "rotation": "[0, 0, 0]",
+                            "scaling": "[1, 1, 1]"
+                          },
+                          "Component": {
+                            "active": true
+                          }
+                        }
+                      }
+                    ],
+                    "ComponentMaterial": [
+                      {
+                        "ƒ.ComponentMaterial": {
+                          "sortForAlpha": false,
+                          "clrPrimary": "[0.34901960784313724, 0.34901960784313724, 0.34901960784313724, 1]",
+                          "clrSecondary": "[1, 1, 1, 1]",
+                          "pivot": {
+                            "translation": "[0, 0]",
+                            "rotation": 0,
+                            "scaling": "[1, 1]"
+                          },
+                          "Component": {
+                            "active": true
+                          },
+                          "idMaterial": "Material|2023-06-26T14:03:23.027Z|96039"
+                        }
+                      }
+                    ]
+                  },
+                  "children": []
+                }
+              },
+              {
+                "ƒ.Node": {
+                  "name": "Downsi",
+                  "active": true,
+                  "components": {
+                    "ComponentMesh": [
+                      {
+                        "ƒ.ComponentMesh": {
+                          "idMesh": "MeshCube|2023-06-26T13:56:14.618Z|27173",
+                          "pivot": {
+                            "translation": "[0, 0, 0]",
+                            "rotation": "[0, 0, 0]",
+                            "scaling": "[1, 1, 1]"
+                          },
+                          "Component": {
+                            "active": true
+                          }
+                        }
+                      }
+                    ],
+                    "ComponentTransform": [
+                      {
+                        "ƒ.ComponentTransform": {
+                          "local": {
+                            "translation": "[0, -4, 0]",
+                            "rotation": "[0, 0, 0]",
+                            "scaling": "[8, 0.30000001192092896, 1]"
+                          },
+                          "Component": {
+                            "active": true
+                          }
+                        }
+                      }
+                    ],
+                    "ComponentRigidbody": [
+                      {
+                        "ƒ.ComponentRigidbody": {
+                          "initialization": "TO_PIVOT",
+                          "friction": 0.2,
+                          "restitution": 0.2,
+                          "mass": 1,
+                          "dampTranslation": 0.1,
+                          "dampRotation": 0.1,
+                          "effectGravity": 1,
+                          "typeBody": "STATIC",
+                          "typeCollider": "CUBE",
+                          "isTrigger": false,
+                          "id": 1,
+                          "pivot": {
+                            "translation": "[0, 0, 0]",
+                            "rotation": "[0, 0, 0]",
+                            "scaling": "[1, 1, 1]"
+                          },
+                          "Component": {
+                            "active": true
+                          }
+                        }
+                      }
+                    ],
+                    "ComponentMaterial": [
+                      {
+                        "ƒ.ComponentMaterial": {
+                          "sortForAlpha": false,
+                          "clrPrimary": "[0.34901960784313724, 0.34901960784313724, 0.34901960784313724, 1]",
+                          "clrSecondary": "[1, 1, 1, 1]",
+                          "pivot": {
+                            "translation": "[0, 0]",
+                            "rotation": 0,
+                            "scaling": "[1, 1]"
+                          },
+                          "Component": {
+                            "active": true
+                          },
+                          "idMaterial": "Material|2023-06-26T14:03:23.027Z|96039"
+                        }
+                      }
+                    ]
+                  },
+                  "children": []
+                }
+              }
+            ]
           }
         }
       ],
@@ -315,6 +478,70 @@
         "idResource": "TextureImage|2023-06-12T14:35:29.659Z|03574",
         "name": "Resoources\\fly.png",
         "mipmap": "CRISP"
+      }
+    }
+  },
+  "MeshCube|2023-06-26T13:56:14.618Z|27173": {
+    "ƒ.MeshCube": {
+      "idResource": "MeshCube|2023-06-26T13:56:14.618Z|27173",
+      "name": "MeshCube",
+      "type": "MeshCube"
+    }
+  },
+  "Material|2023-06-26T13:57:48.577Z|41369": {
+    "ƒ.Material": {
+      "name": "ShaderLitTextured",
+      "idResource": "Material|2023-06-26T13:57:48.577Z|41369",
+      "shader": "ShaderLitTextured",
+      "coat": {
+        "ƒ.CoatTextured": {
+          "color": "[0.3607843137254902, 0.3411764705882353, 0.3411764705882353, 1]"
+        }
+      }
+    }
+  },
+  "Material|2023-06-26T14:03:23.027Z|96039": {
+    "ƒ.Material": {
+      "name": "ShaderFlat",
+      "idResource": "Material|2023-06-26T14:03:23.027Z|96039",
+      "shader": "ShaderFlat",
+      "coat": {
+        "ƒ.CoatRemissive": {
+          "color": "[1, 1, 1, 1]",
+          "diffuse": 1,
+          "specular": 0
+        }
+      }
+    }
+  },
+  "TextureImage|2023-06-26T14:49:41.585Z|38092": {
+    "ƒ.TextureImage": {
+      "url": "Resoources\\spritesheet.png",
+      "type": "TextureImage",
+      "Texture": {
+        "idResource": "TextureImage|2023-06-26T14:49:41.585Z|38092",
+        "name": "Resoources\\spritesheet.png",
+        "mipmap": "CRISP"
+      }
+    }
+  },
+  "AnimationSprite|2023-06-26T15:10:06.385Z|40063": {
+    "ƒ.AnimationSprite": {
+      "idResource": "AnimationSprite|2023-06-26T15:10:06.385Z|40063",
+      "idTexture": "TextureImage|2023-06-26T14:49:41.585Z|38092",
+      "frames": 4,
+      "wrapAfter": 5,
+      "start": "[-24, 400]",
+      "size": "[294, 387]",
+      "next": "[450, 0]",
+      "wrap": "[0, 80]",
+      "Animation": {
+        "idResource": "AnimationSprite|2023-06-26T15:10:06.385Z|40063",
+        "name": "fly",
+        "labels": {},
+        "events": {},
+        "framesPerSecond": 4,
+        "animationStructure": {}
       }
     }
   }

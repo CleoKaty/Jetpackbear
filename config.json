@@ -1,4 +1,5 @@
 {
     "force":100,
-    "torgue":10
+    "torgue":10,
+    "ypush":0.6
 }

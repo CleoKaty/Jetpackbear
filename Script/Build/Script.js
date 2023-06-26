@@ -43,6 +43,7 @@ var Script;
     //needed variables
     let viewport;
     let character;
+    let bear;
     //let gravity: number;
     let graph;
     let cmpCamera;
@@ -52,19 +53,11 @@ var Script;
         keywords["l"] = "l";
     })(keywords || (keywords = {}));
     document.addEventListener("interactiveViewportStarted", start);
-    async function configGrap(_event) {
-        let response = await fetch("config.json");
-        config = await response.json();
-        console.log(config);
-        console.log(keywords);
-    }
-    ;
     async function start(_event) {
         //fetch config
-        await configGrap;
-        //start loop
-        ƒ.Loop.addEventListener("loopFrame" /* ƒ.EVENT.LOOP_FRAME */, update);
-        ƒ.Loop.start(); // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
+        let response = await fetch("config.json");
+        config = await response.json();
+        console.log(keywords);
         //set up viewport
         viewport = _event.detail;
         graph = viewport.getBranch();
@@ -72,6 +65,9 @@ var Script;
         ƒ.AudioManager.default.listenTo(graph);
         cmpCamera = graph.getComponent(ƒ.ComponentCamera);
         viewport.camera = cmpCamera;
+        //start loop
+        ƒ.Loop.addEventListener("loopFrame" /* ƒ.EVENT.LOOP_FRAME */, update);
+        ƒ.Loop.start(); // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
     }
     function update(_event) {
         // ƒ.Physics.simulate();  // if physics is included and used
@@ -80,21 +76,37 @@ var Script;
         ƒ.AudioManager.default.update();
         setupChar();
         fly();
+        death();
     }
     function fly() {
         let cmpRigidbody = character.getComponent(ƒ.ComponentRigidbody);
         if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.SPACE])) {
-            cmpRigidbody.addVelocity(ƒ.Vector3.Y(5));
-            console.log("fly");
+            changeAnimation("fly");
+            cmpRigidbody.addVelocity(ƒ.Vector3.Y(config.ypush));
+        }
+        else {
+            changeAnimation("fall");
         }
     }
     function setupChar() {
         // console.log(ƒ.Physics.settings.sleepingAngularVelocityThreshold);
         character = viewport.getBranch().getChildrenByName("Character")[0];
-        viewport.camera = character.getChild(0).getComponent(ƒ.ComponentCamera);
         let cmpRigidbody = character.getComponent(ƒ.ComponentRigidbody);
         cmpRigidbody.effectRotation = ƒ.Vector3.Y();
         //cmpRigidbody.addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, steveCollides);
+    }
+    function death() {
+        if (character.mtxWorld.translation.y <= -3) {
+            console.log("death");
+        }
+    }
+    function changeAnimation(_animation) {
+        bear = character.getChildrenByName("Bear")[0];
+        let currentAnim = bear.getComponent(ƒ.ComponentAnimator).animation;
+        const newAnim = ƒ.Project.getResourcesByName(_animation)[0];
+        if (currentAnim != newAnim) {
+            bear.getComponent(ƒ.ComponentAnimator).animation = newAnim;
+        }
     }
 })(Script || (Script = {}));
 // namespace Script{
