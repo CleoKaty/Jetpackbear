@@ -7,6 +7,7 @@ namespace Script {
   let viewport: ƒ.Viewport;
   let character: ƒ.Node;
   let bear: ƒ.Node;
+  let life: number;
   //let gravity: number;
   let graph: ƒ.Graph;
   let cmpCamera: ƒ.ComponentCamera;
@@ -25,6 +26,8 @@ namespace Script {
     let response = await fetch("config.json");
     config = await response.json();
     console.log(keywords);
+    life = 3;
+
    
     //set up viewport
     viewport = (<CustomEvent>_event).detail;
@@ -40,8 +43,10 @@ namespace Script {
     //start loop
     ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
     ƒ.Loop.start();  // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
-    
-   
+
+    //build world
+    //generateworld(config.worldlength);
+    setupChar();
   }
 
   function update(_event: Event): void {
@@ -49,13 +54,18 @@ namespace Script {
     ƒ.Physics.simulate();
     viewport.draw();
     ƒ.AudioManager.default.update();
-    setupChar();
+    
     fly();
+    hurt();
     death();
+    followCamera();
   }
+
+  //functions
 
   function fly():void{
     let cmpRigidbody: ƒ.ComponentRigidbody = character.getComponent(ƒ.ComponentRigidbody);
+    cmpRigidbody.addVelocity(ƒ.Vector3.X(config.xpush));
     if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.SPACE])) {
       changeAnimation("fly");
       cmpRigidbody.addVelocity(ƒ.Vector3.Y(config.ypush));
@@ -63,8 +73,17 @@ namespace Script {
     else{
       changeAnimation("fall");
     }
+}
+function death(){
+  if (life == 0){
+    console.log("death");
 
-  
+  }
+}
+function hurt():void{
+  if(falldeath() == true){
+    life -=1;
+  }
 }
 function setupChar(): void {
   // console.log(ƒ.Physics.settings.sleepingAngularVelocityThreshold);
@@ -74,10 +93,12 @@ function setupChar(): void {
   //cmpRigidbody.addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, steveCollides);
 }
 
-function death():void{
+function falldeath():boolean{
+  let death: boolean = false;
   if (character.mtxWorld.translation.y <= -3){
-    console.log("death");
+    death = true;
   }
+  return death;
 }
 function changeAnimation(_animation: string): void {
   bear = character.getChildrenByName("Bear")[0];
@@ -87,5 +108,40 @@ function changeAnimation(_animation: string): void {
     bear.getComponent(ƒ.ComponentAnimator).animation = newAnim;
   }
 }
-
+function followCamera() {
+  let mutator: ƒ.Mutator = character.mtxLocal.getMutator();
+  viewport.camera.mtxPivot.mutate(
+    { "translation": { "x": mutator.translation.x } }
+  );
 }
+
+//world
+function generateworld(_length: number):void{
+  let xPos:number = 24;
+  let roomcount: number = 0;
+  for (let y: number = 0; y < _length; y++) {
+        createRoom(xPos, roomcount);
+        xPos += 21;
+        xPos += 1;
+      }
+}
+    function createRoom(_xPos: number, _roomNumber: number): void {
+      let upsi1: upsi = new upsi(_xPos);
+      let downsi1: downsi = new downsi(_xPos);
+      let left1: left = new left(_xPos);
+      let right1: right = new right(_xPos);
+      let room: ƒ.Node;
+      let background:ƒ.Node = viewport.getBranch().getChildrenByName("Background")[0];
+      background.addChild(room);
+      let roomPlace: ƒ.Node = background.getChildrenByName("room")[_roomNumber];
+      roomPlace.addChild(upsi1);
+      roomPlace.addChild(downsi1);
+      roomPlace.addChild(left1);
+      roomPlace.addChild(right1);
+    }
+}
+
+
+
+
+

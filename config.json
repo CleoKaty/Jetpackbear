@@ -1,5 +1,7 @@
 {
     "force":100,
     "torgue":10,
-    "ypush":0.6
+    "ypush":0.6,
+    "xpush":0.03,
+    "worldlength": 10
 }

@@ -44,6 +44,7 @@ var Script;
     let viewport;
     let character;
     let bear;
+    let life;
     //let gravity: number;
     let graph;
     let cmpCamera;
@@ -58,6 +59,7 @@ var Script;
         let response = await fetch("config.json");
         config = await response.json();
         console.log(keywords);
+        life = 3;
         //set up viewport
         viewport = _event.detail;
         graph = viewport.getBranch();
@@ -68,24 +70,40 @@ var Script;
         //start loop
         ƒ.Loop.addEventListener("loopFrame" /* ƒ.EVENT.LOOP_FRAME */, update);
         ƒ.Loop.start(); // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
+        //build world
+        //generateworld(config.worldlength);
+        setupChar();
     }
     function update(_event) {
         // ƒ.Physics.simulate();  // if physics is included and used
         ƒ.Physics.simulate();
         viewport.draw();
         ƒ.AudioManager.default.update();
-        setupChar();
         fly();
+        hurt();
         death();
+        followCamera();
     }
+    //functions
     function fly() {
         let cmpRigidbody = character.getComponent(ƒ.ComponentRigidbody);
+        cmpRigidbody.addVelocity(ƒ.Vector3.X(config.xpush));
         if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.SPACE])) {
             changeAnimation("fly");
             cmpRigidbody.addVelocity(ƒ.Vector3.Y(config.ypush));
         }
         else {
             changeAnimation("fall");
+        }
+    }
+    function death() {
+        if (life == 0) {
+            console.log("death");
+        }
+    }
+    function hurt() {
+        if (falldeath() == true) {
+            life -= 1;
         }
     }
     function setupChar() {
@@ -95,10 +113,12 @@ var Script;
         cmpRigidbody.effectRotation = ƒ.Vector3.Y();
         //cmpRigidbody.addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, steveCollides);
     }
-    function death() {
+    function falldeath() {
+        let death = false;
         if (character.mtxWorld.translation.y <= -3) {
-            console.log("death");
+            death = true;
         }
+        return death;
     }
     function changeAnimation(_animation) {
         bear = character.getChildrenByName("Bear")[0];
@@ -107,6 +127,34 @@ var Script;
         if (currentAnim != newAnim) {
             bear.getComponent(ƒ.ComponentAnimator).animation = newAnim;
         }
+    }
+    function followCamera() {
+        let mutator = character.mtxLocal.getMutator();
+        viewport.camera.mtxPivot.mutate({ "translation": { "x": mutator.translation.x } });
+    }
+    //world
+    function generateworld(_length) {
+        let xPos = 24;
+        let roomcount = 0;
+        for (let y = 0; y < _length; y++) {
+            createRoom(xPos, roomcount);
+            xPos += 21;
+            xPos += 1;
+        }
+    }
+    function createRoom(_xPos, _roomNumber) {
+        let upsi1 = new Script.upsi(_xPos);
+        let downsi1 = new Script.downsi(_xPos);
+        let left1 = new Script.left(_xPos);
+        let right1 = new Script.right(_xPos);
+        let room;
+        let background = viewport.getBranch().getChildrenByName("Background")[0];
+        background.addChild(room);
+        let roomPlace = background.getChildrenByName("room")[_roomNumber];
+        roomPlace.addChild(upsi1);
+        roomPlace.addChild(downsi1);
+        roomPlace.addChild(left1);
+        roomPlace.addChild(right1);
     }
 })(Script || (Script = {}));
 // namespace Script{
@@ -127,4 +175,59 @@ var Script;
 //         protected reduceMutator(_mutator: ƒ.Mutator):void{};
 //     }
 // }
+var Script;
+(function (Script) {
+    var ƒ = FudgeCore;
+    class walls extends ƒ.Node {
+        static wallsmesh = new ƒ.MeshCube("walls");
+        static wallsmaterial = new ƒ.Material("walls", ƒ.ShaderFlatTextured);
+        constructor() {
+            super("walls");
+            this.addComponent(new ƒ.ComponentMesh(walls.wallsmesh));
+            let cmpMaterial = new ƒ.ComponentMaterial(walls.wallsmaterial);
+            this.addComponent(cmpMaterial);
+            this.addComponent(new ƒ.ComponentTransform());
+            let cmpRigidbody = new ƒ.ComponentRigidbody(1, ƒ.BODY_TYPE.STATIC, ƒ.COLLIDER_TYPE.CUBE);
+            this.addComponent(cmpRigidbody);
+            // cmpRigidbody.addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, () => console.log("Collision"));
+        }
+    }
+    Script.walls = walls;
+    class upsi extends walls {
+        constructor(_positionX) {
+            super();
+            let positionVector = new ƒ.Vector3(_positionX, 3, 0);
+            this.mtxLocal.translation.set(positionVector.x, positionVector.y, positionVector.z);
+            this.mtxLocal.scale(new ƒ.Vector3(21, 0.3, 1));
+        }
+    }
+    Script.upsi = upsi;
+    class downsi extends walls {
+        constructor(_positionX) {
+            super();
+            let positionVector = new ƒ.Vector3(_positionX, -4, 0);
+            this.mtxLocal.translation.set(positionVector.x, positionVector.y, positionVector.z);
+            this.mtxLocal.scale(new ƒ.Vector3(21, 0.3, 1));
+        }
+    }
+    Script.downsi = downsi;
+    class left extends walls {
+        constructor(_positionX) {
+            super();
+            let positionVector = new ƒ.Vector3(_positionX, -0.5, 1);
+            this.mtxLocal.translation.set(positionVector.x, positionVector.y, positionVector.z);
+            this.mtxLocal.scale(new ƒ.Vector3(21, 6, 1));
+        }
+    }
+    Script.left = left;
+    class right extends walls {
+        constructor(_positionX) {
+            super();
+            let positionVector = new ƒ.Vector3(_positionX, -0.5, -1);
+            this.mtxLocal.translation.set(positionVector.x, positionVector.y, positionVector.z);
+            this.mtxLocal.scale(new ƒ.Vector3(21, 6, 1));
+        }
+    }
+    Script.right = right;
+})(Script || (Script = {}));
 //# sourceMappingURL=Script.js.map
