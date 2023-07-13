@@ -45,6 +45,7 @@ var Script;
     let character;
     let bear;
     let life;
+    let background;
     //let gravity: number;
     let graph;
     let cmpCamera;
@@ -67,12 +68,12 @@ var Script;
         ƒ.AudioManager.default.listenTo(graph);
         cmpCamera = graph.getComponent(ƒ.ComponentCamera);
         viewport.camera = cmpCamera;
+        //build world
+        generateworld(config.worldlength);
+        setupChar();
         //start loop
         ƒ.Loop.addEventListener("loopFrame" /* ƒ.EVENT.LOOP_FRAME */, update);
         ƒ.Loop.start(); // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
-        //build world
-        //generateworld(config.worldlength);
-        setupChar();
     }
     function update(_event) {
         // ƒ.Physics.simulate();  // if physics is included and used
@@ -137,8 +138,9 @@ var Script;
         let xPos = 24;
         let roomcount = 0;
         for (let y = 0; y < _length; y++) {
+            console.log(xPos, roomcount);
             createRoom(xPos, roomcount);
-            xPos += 21;
+            xPos += 20;
             xPos += 1;
         }
     }
@@ -147,14 +149,16 @@ var Script;
         let downsi1 = new Script.downsi(_xPos);
         let left1 = new Script.left(_xPos);
         let right1 = new Script.right(_xPos);
-        let room;
-        let background = viewport.getBranch().getChildrenByName("Background")[0];
+        let picture1 = new Script.picture(_xPos, "room");
+        let room = new ƒ.Node("room");
+        background = viewport.getBranch().getChildrenByName("Background")[0];
         background.addChild(room);
         let roomPlace = background.getChildrenByName("room")[_roomNumber];
         roomPlace.addChild(upsi1);
         roomPlace.addChild(downsi1);
         roomPlace.addChild(left1);
         roomPlace.addChild(right1);
+        roomPlace.addChild(picture1);
     }
 })(Script || (Script = {}));
 // namespace Script{
@@ -178,13 +182,51 @@ var Script;
 var Script;
 (function (Script) {
     var ƒ = FudgeCore;
+    ƒ.Project.registerScriptNamespace(Script); // Register the namespace to FUDGE for serialization
+    class CustomComponentScript extends ƒ.ComponentScript {
+        // Register the script as component for use in the editor via drag&drop
+        static iSubclass = ƒ.Component.registerSubclass(CustomComponentScript);
+        // Properties may be mutated by users in the editor via the automatically created user interface
+        message = "CustomComponentScript added to ";
+        constructor() {
+            super();
+            // Don't start when running in editor
+            if (ƒ.Project.mode == ƒ.MODE.EDITOR)
+                return;
+            // Listen to this component being added to or removed from a node
+            this.addEventListener("componentAdd" /* ƒ.EVENT.COMPONENT_ADD */, this.hndEvent);
+            this.addEventListener("componentRemove" /* ƒ.EVENT.COMPONENT_REMOVE */, this.hndEvent);
+            this.addEventListener("nodeDeserialized" /* ƒ.EVENT.NODE_DESERIALIZED */, this.hndEvent);
+        }
+        // Activate the functions of this component as response to events
+        hndEvent = (_event) => {
+            switch (_event.type) {
+                case "componentAdd" /* ƒ.EVENT.COMPONENT_ADD */:
+                    ƒ.Debug.log(this.message, this.node);
+                    break;
+                case "componentRemove" /* ƒ.EVENT.COMPONENT_REMOVE */:
+                    this.removeEventListener("componentAdd" /* ƒ.EVENT.COMPONENT_ADD */, this.hndEvent);
+                    this.removeEventListener("componentRemove" /* ƒ.EVENT.COMPONENT_REMOVE */, this.hndEvent);
+                    break;
+                case "nodeDeserialized" /* ƒ.EVENT.NODE_DESERIALIZED */:
+                    // if deserialized the node is now fully reconstructed and access to all its components and children is possible
+                    break;
+            }
+        };
+    }
+    Script.CustomComponentScript = CustomComponentScript;
+})(Script || (Script = {}));
+var Script;
+(function (Script) {
+    var ƒ = FudgeCore;
     class walls extends ƒ.Node {
         static wallsmesh = new ƒ.MeshCube("walls");
-        static wallsmaterial = new ƒ.Material("walls", ƒ.ShaderFlatTextured);
+        static wallsmaterial = new ƒ.Material("walls", ƒ.ShaderFlat, new ƒ.CoatRemissive());
         constructor() {
             super("walls");
             this.addComponent(new ƒ.ComponentMesh(walls.wallsmesh));
             let cmpMaterial = new ƒ.ComponentMaterial(walls.wallsmaterial);
+            cmpMaterial.clrPrimary = new ƒ.Color(165, 165, 165, 1);
             this.addComponent(cmpMaterial);
             this.addComponent(new ƒ.ComponentTransform());
             let cmpRigidbody = new ƒ.ComponentRigidbody(1, ƒ.BODY_TYPE.STATIC, ƒ.COLLIDER_TYPE.CUBE);
@@ -196,26 +238,28 @@ var Script;
     class upsi extends walls {
         constructor(_positionX) {
             super();
-            let positionVector = new ƒ.Vector3(_positionX, 3, 0);
-            this.mtxLocal.translation.set(positionVector.x, positionVector.y, positionVector.z);
             this.mtxLocal.scale(new ƒ.Vector3(21, 0.3, 1));
+            let positionVector = new ƒ.Vector3(_positionX, 3, 0);
+            this.mtxLocal.translation = positionVector;
         }
     }
     Script.upsi = upsi;
     class downsi extends walls {
         constructor(_positionX) {
             super();
-            let positionVector = new ƒ.Vector3(_positionX, -4, 0);
-            this.mtxLocal.translation.set(positionVector.x, positionVector.y, positionVector.z);
             this.mtxLocal.scale(new ƒ.Vector3(21, 0.3, 1));
+            let positionVector = new ƒ.Vector3(_positionX, -4, 0);
+            this.mtxLocal.translation = positionVector;
         }
     }
     Script.downsi = downsi;
     class left extends walls {
         constructor(_positionX) {
             super();
+            let cmpmat = this.getComponent(ƒ.ComponentMaterial);
+            this.removeComponent(cmpmat);
             let positionVector = new ƒ.Vector3(_positionX, -0.5, 1);
-            this.mtxLocal.translation.set(positionVector.x, positionVector.y, positionVector.z);
+            this.mtxLocal.translation = positionVector;
             this.mtxLocal.scale(new ƒ.Vector3(21, 6, 1));
         }
     }
@@ -223,11 +267,29 @@ var Script;
     class right extends walls {
         constructor(_positionX) {
             super();
+            let cmpmat = this.getComponent(ƒ.ComponentMaterial);
+            this.removeComponent(cmpmat);
             let positionVector = new ƒ.Vector3(_positionX, -0.5, -1);
-            this.mtxLocal.translation.set(positionVector.x, positionVector.y, positionVector.z);
+            this.mtxLocal.translation = positionVector;
             this.mtxLocal.scale(new ƒ.Vector3(21, 6, 1));
         }
     }
     Script.right = right;
+    class picture extends ƒ.Node {
+        static picturemesh = new ƒ.MeshQuad("meshpic");
+        static picturemat;
+        constructor(_positionX, _meterial) {
+            super("picture");
+            this.addComponent(new ƒ.ComponentMesh(picture.picturemesh));
+            let cmpMaterial = new ƒ.ComponentMaterial(ƒ.Project.getResourcesByName(_meterial)[0]);
+            console.log(cmpMaterial);
+            this.addComponent(cmpMaterial);
+            this.addComponent(new ƒ.ComponentTransform());
+            let positionVector = new ƒ.Vector3(_positionX, -0.36, -0.5);
+            this.mtxLocal.translation = positionVector;
+            this.mtxLocal.scale(new ƒ.Vector3(21, 7, 1));
+        }
+    }
+    Script.picture = picture;
 })(Script || (Script = {}));
 //# sourceMappingURL=Script.js.map

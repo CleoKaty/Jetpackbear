@@ -2,6 +2,6 @@
     "force":100,
     "torgue":10,
     "ypush":0.6,
-    "xpush":0.03,
+    "xpush":0.01,
     "worldlength": 10
 }

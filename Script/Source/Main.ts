@@ -8,6 +8,7 @@ namespace Script {
   let character: ƒ.Node;
   let bear: ƒ.Node;
   let life: number;
+  let background: ƒ.Node;
   //let gravity: number;
   let graph: ƒ.Graph;
   let cmpCamera: ƒ.ComponentCamera;
@@ -40,13 +41,14 @@ namespace Script {
 
     cmpCamera = graph.getComponent(ƒ.ComponentCamera);
     viewport.camera = cmpCamera;
+
+    //build world
+    generateworld(config.worldlength);
+    setupChar();
+
     //start loop
     ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
     ƒ.Loop.start();  // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
-
-    //build world
-    //generateworld(config.worldlength);
-    setupChar();
   }
 
   function update(_event: Event): void {
@@ -120,8 +122,9 @@ function generateworld(_length: number):void{
   let xPos:number = 24;
   let roomcount: number = 0;
   for (let y: number = 0; y < _length; y++) {
+        console.log(xPos,roomcount);
         createRoom(xPos, roomcount);
-        xPos += 21;
+        xPos += 20;
         xPos += 1;
       }
 }
@@ -130,14 +133,16 @@ function generateworld(_length: number):void{
       let downsi1: downsi = new downsi(_xPos);
       let left1: left = new left(_xPos);
       let right1: right = new right(_xPos);
-      let room: ƒ.Node;
-      let background:ƒ.Node = viewport.getBranch().getChildrenByName("Background")[0];
+      let picture1: picture = new picture(_xPos, "room");
+      let room: ƒ.Node = new ƒ.Node("room");
+      background = viewport.getBranch().getChildrenByName("Background")[0];
       background.addChild(room);
       let roomPlace: ƒ.Node = background.getChildrenByName("room")[_roomNumber];
       roomPlace.addChild(upsi1);
       roomPlace.addChild(downsi1);
       roomPlace.addChild(left1);
       roomPlace.addChild(right1);
+      roomPlace.addChild(picture1);
     }
 }
 
