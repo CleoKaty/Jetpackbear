@@ -4,8 +4,8 @@ namespace Script {
 
 
   //needed variables
-  let viewport: ƒ.Viewport;
-  let character: ƒ.Node;
+  export let viewport: ƒ.Viewport;
+  export let character: ƒ.Node;
   let bear: ƒ.Node;
   let life: number;
   let background: ƒ.Node;
@@ -33,6 +33,11 @@ namespace Script {
     //set up viewport
     viewport = (<CustomEvent>_event).detail;
     graph = <ƒ.Graph>viewport.getBranch();
+
+    //vui
+    let gamestate: Gamestate = new Gamestate();
+    console.log(gamestate);
+
  
 
 
@@ -122,12 +127,12 @@ function generateworld(_length: number):void{
   let xPos:number = 24;
   let roomcount: number = 0;
   for (let y: number = 0; y < _length; y++) {
-        console.log(xPos,roomcount);
         createRoom(xPos, roomcount);
         xPos += 20;
         xPos += 1;
       }
 }
+
     function createRoom(_xPos: number, _roomNumber: number): void {
       let upsi1: upsi = new upsi(_xPos);
       let downsi1: downsi = new downsi(_xPos);

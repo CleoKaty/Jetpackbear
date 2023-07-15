@@ -79,7 +79,6 @@ namespace Script {
             this.addComponent(new ƒ.ComponentMesh(picture.picturemesh));
             
             let cmpMaterial: ƒ.ComponentMaterial = new ƒ.ComponentMaterial(ƒ.Project.getResourcesByName(_meterial)[0] as ƒ.Material);
-            console.log(cmpMaterial);
             this.addComponent(cmpMaterial);
             
                

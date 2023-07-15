@@ -40,9 +40,6 @@ var Script;
 (function (Script) {
     var ƒ = FudgeCore;
     ƒ.Debug.info("Main Program Template running!");
-    //needed variables
-    let viewport;
-    let character;
     let bear;
     let life;
     let background;
@@ -62,12 +59,15 @@ var Script;
         console.log(keywords);
         life = 3;
         //set up viewport
-        viewport = _event.detail;
-        graph = viewport.getBranch();
+        Script.viewport = _event.detail;
+        graph = Script.viewport.getBranch();
+        //vui
+        let gamestate = new Script.Gamestate();
+        console.log(gamestate);
         ƒ.AudioManager.default.listenWith(graph.getComponent(ƒ.ComponentAudioListener));
         ƒ.AudioManager.default.listenTo(graph);
         cmpCamera = graph.getComponent(ƒ.ComponentCamera);
-        viewport.camera = cmpCamera;
+        Script.viewport.camera = cmpCamera;
         //build world
         generateworld(config.worldlength);
         setupChar();
@@ -78,7 +78,7 @@ var Script;
     function update(_event) {
         // ƒ.Physics.simulate();  // if physics is included and used
         ƒ.Physics.simulate();
-        viewport.draw();
+        Script.viewport.draw();
         ƒ.AudioManager.default.update();
         fly();
         hurt();
@@ -87,7 +87,7 @@ var Script;
     }
     //functions
     function fly() {
-        let cmpRigidbody = character.getComponent(ƒ.ComponentRigidbody);
+        let cmpRigidbody = Script.character.getComponent(ƒ.ComponentRigidbody);
         cmpRigidbody.addVelocity(ƒ.Vector3.X(config.xpush));
         if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.SPACE])) {
             changeAnimation("fly");
@@ -109,20 +109,20 @@ var Script;
     }
     function setupChar() {
         // console.log(ƒ.Physics.settings.sleepingAngularVelocityThreshold);
-        character = viewport.getBranch().getChildrenByName("Character")[0];
-        let cmpRigidbody = character.getComponent(ƒ.ComponentRigidbody);
+        Script.character = Script.viewport.getBranch().getChildrenByName("Character")[0];
+        let cmpRigidbody = Script.character.getComponent(ƒ.ComponentRigidbody);
         cmpRigidbody.effectRotation = ƒ.Vector3.Y();
         //cmpRigidbody.addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, steveCollides);
     }
     function falldeath() {
         let death = false;
-        if (character.mtxWorld.translation.y <= -3) {
+        if (Script.character.mtxWorld.translation.y <= -3) {
             death = true;
         }
         return death;
     }
     function changeAnimation(_animation) {
-        bear = character.getChildrenByName("Bear")[0];
+        bear = Script.character.getChildrenByName("Bear")[0];
         let currentAnim = bear.getComponent(ƒ.ComponentAnimator).animation;
         const newAnim = ƒ.Project.getResourcesByName(_animation)[0];
         if (currentAnim != newAnim) {
@@ -130,15 +130,14 @@ var Script;
         }
     }
     function followCamera() {
-        let mutator = character.mtxLocal.getMutator();
-        viewport.camera.mtxPivot.mutate({ "translation": { "x": mutator.translation.x } });
+        let mutator = Script.character.mtxLocal.getMutator();
+        Script.viewport.camera.mtxPivot.mutate({ "translation": { "x": mutator.translation.x } });
     }
     //world
     function generateworld(_length) {
         let xPos = 24;
         let roomcount = 0;
         for (let y = 0; y < _length; y++) {
-            console.log(xPos, roomcount);
             createRoom(xPos, roomcount);
             xPos += 20;
             xPos += 1;
@@ -151,7 +150,7 @@ var Script;
         let right1 = new Script.right(_xPos);
         let picture1 = new Script.picture(_xPos, "room");
         let room = new ƒ.Node("room");
-        background = viewport.getBranch().getChildrenByName("Background")[0];
+        background = Script.viewport.getBranch().getChildrenByName("Background")[0];
         background.addChild(room);
         let roomPlace = background.getChildrenByName("room")[_roomNumber];
         roomPlace.addChild(upsi1);
@@ -161,31 +160,34 @@ var Script;
         roomPlace.addChild(picture1);
     }
 })(Script || (Script = {}));
-// namespace Script{
-//     import ƒ = FudgeCore;
-//     import ƒUi = FudgeUserInterface;
-//     class Gamestate extends ƒ.Mutable{
-//         public points: number;
-//         public health: number;
-//         public name: string;
-//         constructor(){
-//             super();
-//             this.points = 0;
-//             this.health = 3;
-//             this.name = "Jetpakbear";
-//             let vui: HTMLDivElement = document.querySelector("div#vui");
-//             new ƒUi.Controller(this, vui);
-//         }
-//         protected reduceMutator(_mutator: ƒ.Mutator):void{};
-//     }
-// }
+var Script;
+(function (Script) {
+    var ƒ = FudgeCore;
+    var ƒUi = FudgeUserInterface;
+    class Gamestate extends ƒ.Mutable {
+        points;
+        health;
+        name;
+        constructor() {
+            super();
+            this.points = 0;
+            this.health = 3;
+            this.name = "Jetpakbear";
+            let vui = document.querySelector("div#vui");
+            new ƒUi.Controller(this, vui);
+        }
+        reduceMutator(_mutator) { }
+        ;
+    }
+    Script.Gamestate = Gamestate;
+})(Script || (Script = {}));
 var Script;
 (function (Script) {
     var ƒ = FudgeCore;
     ƒ.Project.registerScriptNamespace(Script); // Register the namespace to FUDGE for serialization
-    class CustomComponentScript extends ƒ.ComponentScript {
+    class collider extends ƒ.ComponentScript {
         // Register the script as component for use in the editor via drag&drop
-        static iSubclass = ƒ.Component.registerSubclass(CustomComponentScript);
+        static iSubclass = ƒ.Component.registerSubclass(Script.CustomComponentScript);
         // Properties may be mutated by users in the editor via the automatically created user interface
         message = "CustomComponentScript added to ";
         constructor() {
@@ -214,7 +216,7 @@ var Script;
             }
         };
     }
-    Script.CustomComponentScript = CustomComponentScript;
+    Script.collider = collider;
 })(Script || (Script = {}));
 var Script;
 (function (Script) {
@@ -282,7 +284,6 @@ var Script;
             super("picture");
             this.addComponent(new ƒ.ComponentMesh(picture.picturemesh));
             let cmpMaterial = new ƒ.ComponentMaterial(ƒ.Project.getResourcesByName(_meterial)[0]);
-            console.log(cmpMaterial);
             this.addComponent(cmpMaterial);
             this.addComponent(new ƒ.ComponentTransform());
             let positionVector = new ƒ.Vector3(_positionX, -0.36, -0.5);
@@ -291,5 +292,88 @@ var Script;
         }
     }
     Script.picture = picture;
+})(Script || (Script = {}));
+var Script;
+(function (Script) {
+    let MODE;
+    (function (MODE) {
+        MODE[MODE["IDLE"] = 0] = "IDLE";
+        MODE[MODE["ATTACK"] = 1] = "ATTACK";
+    })(MODE || (MODE = {}));
+    var ƒAid = FudgeAid;
+    ƒ.Project.registerScriptNamespace(Script);
+    /**
+     * Instruction set to be used by StateMachine and ComponentStateMachine for this test.
+     * In production code, the instructions are most likely defined within the state machines.
+     */
+    class Fusselactions extends ƒAid.ComponentStateMachine {
+        static iSubclass = ƒ.Component.registerSubclass(Fusselactions);
+        static instructions = Fusselactions.get();
+        constructor() {
+            super();
+            this.instructions = Fusselactions.instructions; // setup instructions with the static set
+            // Don't start when running in editor
+            if (ƒ.Project.mode == ƒ.MODE.EDITOR)
+                return;
+            // Listen to this component being added to or removed from a node
+            this.addEventListener("componentAdd" /* ƒ.EVENT.COMPONENT_ADD */, this.hndEvent);
+            this.addEventListener("componentRemove" /* ƒ.EVENT.COMPONENT_REMOVE */, this.hndEvent);
+            this.addEventListener("nodeDeserialized" /* ƒ.EVENT.NODE_DESERIALIZED */, this.hndEvent);
+        }
+        static get() {
+            let setup = new ƒAid.StateMachineInstructions();
+            setup.transitDefault = Fusselactions.transitDefault;
+            setup.actDefault = Fusselactions.actDefault;
+            setup.setAction(MODE.IDLE, this.actIdle);
+            setup.setAction(MODE.ATTACK, this.actAttack);
+            return setup;
+        }
+        static transitDefault(_machine) {
+            console.log("Transit to", _machine.stateNext);
+        }
+        static async actDefault(_machine) {
+            console.log(MODE[_machine.stateCurrent]);
+        }
+        static async actIdle(_machine) {
+            Script.character = Script.viewport.getBranch().getChildrenByName("Character")[0];
+            _machine.node.mtxLocal.rotateZ(1);
+            let posy = Script.character.mtxWorld.translation.y;
+            let posyf = _machine.node.mtxWorld.translation.y;
+            let distancey = posy - posyf;
+            if (distancey < 0) {
+                distancey *= -1;
+            }
+            console.log(distancey);
+            if (distancey < 0.01) {
+                console.log("attack");
+                _machine.transit(MODE.ATTACK);
+            }
+        }
+        static async actAttack(_machine) {
+            let cmpRigidbody = _machine.node.getComponent(ƒ.ComponentRigidbody);
+            cmpRigidbody.addVelocity(ƒ.Vector3.X(0.05));
+        }
+        // Activate the functions of this component as response to events
+        hndEvent = (_event) => {
+            switch (_event.type) {
+                case "componentAdd" /* ƒ.EVENT.COMPONENT_ADD */:
+                    ƒ.Loop.addEventListener("loopFrame" /* ƒ.EVENT.LOOP_FRAME */, this.update);
+                    this.transit(MODE.IDLE);
+                    break;
+                case "componentRemove" /* ƒ.EVENT.COMPONENT_REMOVE */:
+                    this.removeEventListener("componentAdd" /* ƒ.EVENT.COMPONENT_ADD */, this.hndEvent);
+                    this.removeEventListener("componentRemove" /* ƒ.EVENT.COMPONENT_REMOVE */, this.hndEvent);
+                    ƒ.Loop.removeEventListener("loopFrame" /* ƒ.EVENT.LOOP_FRAME */, this.update);
+                    break;
+                case "nodeDeserialized" /* ƒ.EVENT.NODE_DESERIALIZED */:
+                    this.transit(MODE.IDLE);
+                    break;
+            }
+        };
+        update = (_event) => {
+            this.act();
+        };
+    }
+    Script.Fusselactions = Fusselactions;
 })(Script || (Script = {}));
 //# sourceMappingURL=Script.js.map
