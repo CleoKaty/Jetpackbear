@@ -150,6 +150,56 @@
       }
     }
   },
+  "Material|2023-07-13T10:41:22.744Z|03381": {
+    "ƒ.Material": {
+      "name": "kiste",
+      "idResource": "Material|2023-07-13T10:41:22.744Z|03381",
+      "shader": "ShaderFlatTextured",
+      "coat": {
+        "ƒ.CoatRemissiveTextured": {
+          "color": "[1, 1, 1, 1]",
+          "idTexture": "TextureImage|2023-07-13T10:41:06.431Z|60046",
+          "diffuse": 1,
+          "specular": 0
+        }
+      }
+    }
+  },
+  "TextureImage|2023-07-13T10:41:06.431Z|60046": {
+    "ƒ.TextureImage": {
+      "url": "Resoources\\kiste.png",
+      "type": "TextureImage",
+      "Texture": {
+        "idResource": "TextureImage|2023-07-13T10:41:06.431Z|60046",
+        "name": "Resoources\\kiste.png",
+        "mipmap": "CRISP"
+      }
+    }
+  },
+  "Material|2023-07-13T14:18:28.595Z|11132": {
+    "ƒ.Material": {
+      "name": "wood",
+      "idResource": "Material|2023-07-13T14:18:28.595Z|11132",
+      "shader": "ShaderFlat",
+      "coat": {
+        "ƒ.CoatRemissive": {
+          "color": "[0.7411764705882353, 0.5764705882352941, 0.3843137254901961, 1]",
+          "diffuse": 1,
+          "specular": 0
+        }
+      }
+    }
+  },
+  "Animation|2023-07-13T14:46:08.739Z|77797": {
+    "ƒ.Animation": {
+      "idResource": "Animation|2023-07-13T14:46:08.739Z|77797",
+      "name": "turn",
+      "labels": {},
+      "events": {},
+      "framesPerSecond": 60,
+      "animationStructure": {}
+    }
+  },
   "Graph|2023-05-27T09:17:41.651Z|12920": {
     "ƒ.Graph": {
       "name": "Game",
@@ -370,8 +420,7 @@
                           }
                         }
                       }
-                    ],
-                    "ComponentRigidbody": []
+                    ]
                   },
                   "children": [
                     {
@@ -634,6 +683,77 @@
                             }
                           }
                         ]
+                      }
+                    },
+                    {
+                      "ƒ.Node": {
+                        "name": "twist",
+                        "active": true,
+                        "components": {
+                          "ComponentMesh": [
+                            {
+                              "ƒ.ComponentMesh": {
+                                "idMesh": "MeshQuad|2023-05-27T09:31:38.987Z|07452",
+                                "pivot": {
+                                  "translation": "[0, 0, 0]",
+                                  "rotation": "[0, 0, 0]",
+                                  "scaling": "[1, 1, 1]"
+                                },
+                                "Component": {
+                                  "active": true
+                                }
+                              }
+                            }
+                          ],
+                          "ComponentMaterial": [
+                            {
+                              "ƒ.ComponentMaterial": {
+                                "sortForAlpha": false,
+                                "clrPrimary": "[1, 1, 1, 1]",
+                                "clrSecondary": "[1, 1, 1, 1]",
+                                "pivot": {
+                                  "translation": "[0, 0]",
+                                  "rotation": 0,
+                                  "scaling": "[1, 1]"
+                                },
+                                "Component": {
+                                  "active": true
+                                },
+                                "idMaterial": "Material|2023-07-13T14:18:28.595Z|11132"
+                              }
+                            }
+                          ],
+                          "ComponentTransform": [
+                            {
+                              "ƒ.ComponentTransform": {
+                                "local": {
+                                  "translation": "[7, 0, 0]",
+                                  "rotation": "[0, 0, 0]",
+                                  "scaling": "[1.6000001430511475, 0.09999998658895493, 1]"
+                                },
+                                "Component": {
+                                  "active": true
+                                }
+                              }
+                            }
+                          ],
+                          "ComponentAnimator": [
+                            {
+                              "ƒ.ComponentAnimator": {
+                                "Component": {
+                                  "active": true
+                                },
+                                "idAnimation": "Animation|2023-07-13T14:46:08.739Z|77797",
+                                "playmode": "loop",
+                                "quantization": "continous",
+                                "scale": 1,
+                                "scaleWithGameTime": true,
+                                "animateInEditor": true
+                              }
+                            }
+                          ]
+                        },
+                        "children": []
                       }
                     }
                   ]
@@ -1017,46 +1137,6 @@
         "idResource": "TextureImage|2023-06-12T14:35:29.659Z|03574",
         "name": "Resoources\\fly.png",
         "mipmap": "CRISP"
-      }
-    }
-  },
-  "TextureImage|2023-07-13T10:41:06.431Z|60046": {
-    "ƒ.TextureImage": {
-      "url": "Resoources\\kiste.png",
-      "type": "TextureImage",
-      "Texture": {
-        "idResource": "TextureImage|2023-07-13T10:41:06.431Z|60046",
-        "name": "Resoources\\kiste.png",
-        "mipmap": "CRISP"
-      }
-    }
-  },
-  "Material|2023-07-13T10:41:22.744Z|03381": {
-    "ƒ.Material": {
-      "name": "kiste",
-      "idResource": "Material|2023-07-13T10:41:22.744Z|03381",
-      "shader": "ShaderFlatTextured",
-      "coat": {
-        "ƒ.CoatRemissiveTextured": {
-          "color": "[1, 1, 1, 1]",
-          "idTexture": "TextureImage|2023-07-13T10:41:06.431Z|60046",
-          "diffuse": 1,
-          "specular": 0
-        }
-      }
-    }
-  },
-  "Material|2023-07-13T14:18:28.595Z|11132": {
-    "ƒ.Material": {
-      "name": "wood",
-      "idResource": "Material|2023-07-13T14:18:28.595Z|11132",
-      "shader": "ShaderFlat",
-      "coat": {
-        "ƒ.CoatRemissive": {
-          "color": "[0.7411764705882353, 0.5764705882352941, 0.3843137254901961, 1]",
-          "diffuse": 1,
-          "specular": 0
-        }
       }
     }
   }
