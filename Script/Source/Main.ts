@@ -55,7 +55,8 @@ namespace Script {
     //build world
     generateworld(config.worldlength);
     setupChar();
-    cmpRigidbodyfussel= fussel.getComponent(ƒ.ComponentRigidbody)
+    cmpRigidbodyfussel= fussel.getComponent(ƒ.ComponentRigidbody);
+    cmpRigidbodyfussel.addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, fusselCollides);
 
     //start loop
     ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
@@ -74,7 +75,7 @@ namespace Script {
     hurt();
     death();
     followCamera();
-    cmpRigidbodyfussel.addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, fusselCollides);
+    
   }
 
   //functions

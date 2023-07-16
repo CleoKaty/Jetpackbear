@@ -74,6 +74,7 @@ var Script;
         generateworld(config.worldlength);
         setupChar();
         cmpRigidbodyfussel = Script.fussel.getComponent(ƒ.ComponentRigidbody);
+        cmpRigidbodyfussel.addEventListener("ColliderEnteredCollision" /* ƒ.EVENT_PHYSICS.COLLISION_ENTER */, fusselCollides);
         //start loop
         ƒ.Loop.addEventListener("loopFrame" /* ƒ.EVENT.LOOP_FRAME */, update);
         ƒ.Loop.start(); // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
@@ -87,7 +88,6 @@ var Script;
         hurt();
         death();
         followCamera();
-        cmpRigidbodyfussel.addEventListener("ColliderEnteredCollision" /* ƒ.EVENT_PHYSICS.COLLISION_ENTER */, fusselCollides);
     }
     //functions
     function fly() {
