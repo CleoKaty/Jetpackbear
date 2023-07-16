@@ -52,16 +52,18 @@ namespace Script {
               _machine.node.mtxLocal.rotateZ(1);
               let posy:number = character.mtxWorld.translation.y;
               let posyf:number = _machine.node.mtxWorld.translation.y;
+              let posx:number = character.mtxWorld.translation.x;
+              let posxf:number = _machine.node.mtxWorld.translation.x;
               let distancey: number = posy - posyf;
               if(distancey < 0){
                 distancey *= -1;
               }
-                if(distancey < 0.01){
+                if(distancey < 0.01 && posx > posxf){
                     console.log("attack");
                     _machine.transit(MODE.ATTACK);
                     let customEvent: CustomEvent = new CustomEvent("attack", { bubbles: true });
                     fussel.dispatchEvent(customEvent);
-                }else{
+                }else if(posx > posxf){
                     console.log("follow");
                     let cmpRigidbody: ƒ.ComponentRigidbody = _machine.node.getComponent(ƒ.ComponentRigidbody);
                     cmpRigidbody.addVelocity(ƒ.Vector3.X(0.01));

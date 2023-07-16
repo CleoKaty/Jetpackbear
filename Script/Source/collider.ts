@@ -47,14 +47,17 @@ namespace Script {
       let max: number = 6;
       let min: number = 0;
       let randomnumber: number = Math.random()* (max - min) + min;
+      let rigid: ƒ.ComponentRigidbody = this.node.getComponent(ƒ.ComponentRigidbody);
+      rigid.addVelocity(ƒ.Vector3.X(-5));
       this.fusselfollow(randomnumber-3);
       
     }
 
     public fusselfollow = (_randomnumber: number): void =>{
 
-      let positionVec: ƒ.Vector3 = new ƒ.Vector3(character.mtxWorld.translation.x - 4, _randomnumber, character.mtxWorld.translation.z);
+      let positionVec: ƒ.Vector3 = new ƒ.Vector3(character.mtxWorld.translation.x - 1, _randomnumber, 0);
       this.node.mtxWorld.translation = positionVec;
+      
 
     }
 

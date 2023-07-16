@@ -237,10 +237,12 @@ var Script;
             let max = 6;
             let min = 0;
             let randomnumber = Math.random() * (max - min) + min;
+            let rigid = this.node.getComponent(ƒ.ComponentRigidbody);
+            rigid.addVelocity(ƒ.Vector3.X(-5));
             this.fusselfollow(randomnumber - 3);
         };
         fusselfollow = (_randomnumber) => {
-            let positionVec = new ƒ.Vector3(Script.character.mtxWorld.translation.x - 4, _randomnumber, Script.character.mtxWorld.translation.z);
+            let positionVec = new ƒ.Vector3(Script.character.mtxWorld.translation.x - 1, _randomnumber, 0);
             this.node.mtxWorld.translation = positionVec;
         };
     }
@@ -367,17 +369,19 @@ var Script;
             _machine.node.mtxLocal.rotateZ(1);
             let posy = Script.character.mtxWorld.translation.y;
             let posyf = _machine.node.mtxWorld.translation.y;
+            let posx = Script.character.mtxWorld.translation.x;
+            let posxf = _machine.node.mtxWorld.translation.x;
             let distancey = posy - posyf;
             if (distancey < 0) {
                 distancey *= -1;
             }
-            if (distancey < 0.01) {
+            if (distancey < 0.01 && posx > posxf) {
                 console.log("attack");
                 _machine.transit(MODE.ATTACK);
                 let customEvent = new CustomEvent("attack", { bubbles: true });
                 Script.fussel.dispatchEvent(customEvent);
             }
-            else {
+            else if (posx > posxf) {
                 console.log("follow");
                 let cmpRigidbody = _machine.node.getComponent(ƒ.ComponentRigidbody);
                 cmpRigidbody.addVelocity(ƒ.Vector3.X(0.01));
