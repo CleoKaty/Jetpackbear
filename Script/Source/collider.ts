@@ -35,6 +35,7 @@ namespace Script {
           break;
         case ƒ.EVENT.NODE_DESERIALIZED:
           this.node.addEventListener("collide", this.fusselreset);
+          this.node.addEventListener("far", this.fusselreset);
           // if deserialized the node is now fully reconstructed and access to all its components and children is possible
           break;
       }

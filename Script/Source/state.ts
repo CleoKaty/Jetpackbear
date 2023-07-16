@@ -71,6 +71,12 @@ namespace Script {
             private static async actAttack(_machine: Fusselactions): Promise<void> {
                 let cmpRigidbody: ƒ.ComponentRigidbody = _machine.node.getComponent(ƒ.ComponentRigidbody);
                 cmpRigidbody.addVelocity(ƒ.Vector3.X(0.05));
+                let distancebetween: number = _machine.node.mtxWorld.translation.x -character.mtxWorld.translation.x;
+                if(distancebetween >= 6){
+                    _machine.transit(MODE.IDLE);
+                    let customEvent: CustomEvent = new CustomEvent("far", { bubbles: true });
+                    fussel.dispatchEvent(customEvent);
+                }
             }
             // Activate the functions of this component as response to events
             private hndEvent = (_event: Event): void => {

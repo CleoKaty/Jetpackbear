@@ -227,6 +227,7 @@ var Script;
                     break;
                 case "nodeDeserialized" /* ƒ.EVENT.NODE_DESERIALIZED */:
                     this.node.addEventListener("collide", this.fusselreset);
+                    this.node.addEventListener("far", this.fusselreset);
                     // if deserialized the node is now fully reconstructed and access to all its components and children is possible
                     break;
             }
@@ -385,6 +386,12 @@ var Script;
         static async actAttack(_machine) {
             let cmpRigidbody = _machine.node.getComponent(ƒ.ComponentRigidbody);
             cmpRigidbody.addVelocity(ƒ.Vector3.X(0.05));
+            let distancebetween = _machine.node.mtxWorld.translation.x - Script.character.mtxWorld.translation.x;
+            if (distancebetween >= 6) {
+                _machine.transit(MODE.IDLE);
+                let customEvent = new CustomEvent("far", { bubbles: true });
+                Script.fussel.dispatchEvent(customEvent);
+            }
         }
         // Activate the functions of this component as response to events
         hndEvent = (_event) => {
