@@ -41,6 +41,8 @@ var Script;
     var ƒ = FudgeCore;
     ƒ.Debug.info("Main Program Template running!");
     let bear;
+    let fussel;
+    let hits;
     let life;
     let background;
     //let gravity: number;
@@ -58,12 +60,13 @@ var Script;
         config = await response.json();
         console.log(keywords);
         life = 3;
+        //vui
+        let gamestate = new Script.Gamestate(config);
+        console.log(gamestate);
         //set up viewport
         Script.viewport = _event.detail;
         graph = Script.viewport.getBranch();
-        //vui
-        let gamestate = new Script.Gamestate();
-        console.log(gamestate);
+        Script.viewport.physicsDebugMode = ƒ.PHYSICS_DEBUGMODE.COLLIDERS;
         ƒ.AudioManager.default.listenWith(graph.getComponent(ƒ.ComponentAudioListener));
         ƒ.AudioManager.default.listenTo(graph);
         cmpCamera = graph.getComponent(ƒ.ComponentCamera);
@@ -84,6 +87,8 @@ var Script;
         hurt();
         death();
         followCamera();
+        let cmpRigidbodyfussel = fussel.getComponent(ƒ.ComponentRigidbody);
+        cmpRigidbodyfussel.addEventListener("ColliderEnteredCollision" /* ƒ.EVENT_PHYSICS.COLLISION_ENTER */, fusselCollides);
     }
     //functions
     function fly() {
@@ -110,13 +115,15 @@ var Script;
     function setupChar() {
         // console.log(ƒ.Physics.settings.sleepingAngularVelocityThreshold);
         Script.character = Script.viewport.getBranch().getChildrenByName("Character")[0];
+        hits = Script.viewport.getBranch().getChildrenByName("Hitables")[0];
+        fussel = hits.getChildrenByName("Enemy")[0];
         let cmpRigidbody = Script.character.getComponent(ƒ.ComponentRigidbody);
         cmpRigidbody.effectRotation = ƒ.Vector3.Y();
         //cmpRigidbody.addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, steveCollides);
     }
     function falldeath() {
         let death = false;
-        if (Script.character.mtxWorld.translation.y <= -3) {
+        if (Script.character.mtxWorld.translation.y <= -3.5) {
             death = true;
         }
         return death;
@@ -132,6 +139,15 @@ var Script;
     function followCamera() {
         let mutator = Script.character.mtxLocal.getMutator();
         Script.viewport.camera.mtxPivot.mutate({ "translation": { "x": mutator.translation.x } });
+    }
+    function fusselCollides(_event) {
+        console.log("here");
+        let vctCollision = ƒ.Vector3.DIFFERENCE(_event.collisionPoint, Script.character.mtxWorld.translation);
+        let customEvent = new CustomEvent("collide", { bubbles: true, detail: fussel.getChildrenByName("Fussel") });
+        if (Math.abs(vctCollision.x) <= 0 && Math.abs(vctCollision.z) < 0.1 && vctCollision.y < 0.1) { // collision next to fussel
+            console.log("hit");
+            fussel.dispatchEvent(customEvent);
+        }
     }
     //world
     function generateworld(_length) {
@@ -167,14 +183,13 @@ var Script;
     class Gamestate extends ƒ.Mutable {
         points;
         health;
-        name;
-        constructor() {
+        controller;
+        constructor(_config) {
             super();
             this.points = 0;
-            this.health = 3;
-            this.name = "Jetpakbear";
+            this.health = _config.heart;
             let vui = document.querySelector("div#vui");
-            new ƒUi.Controller(this, vui);
+            this.controller = new ƒUi.Controller(this, vui);
         }
         reduceMutator(_mutator) { }
         ;
@@ -343,7 +358,6 @@ var Script;
             if (distancey < 0) {
                 distancey *= -1;
             }
-            console.log(distancey);
             if (distancey < 0.01) {
                 console.log("attack");
                 _machine.transit(MODE.ATTACK);

@@ -424,7 +424,7 @@
                           "clrPrimary": "[1, 1, 1, 1]",
                           "clrSecondary": "[1, 1, 1, 1]",
                           "pivot": {
-                            "translation": "[0.2639060616493225, 0.5012531280517578]",
+                            "translation": "[0.8201483488082886, 0.5012531280517578]",
                             "rotation": 0,
                             "scaling": "[0.17799752950668335, 0.4849624037742615]"
                           },
@@ -514,7 +514,7 @@
                           "dampRotation": 0.1,
                           "effectGravity": 0,
                           "typeBody": "DYNAMIC",
-                          "typeCollider": "SPHERE",
+                          "typeCollider": "CYLINDER",
                           "isTrigger": false,
                           "id": 7,
                           "pivot": {
@@ -925,7 +925,7 @@
                               "ƒ.ComponentTransform": {
                                 "local": {
                                   "translation": "[7, 0, 0]",
-                                  "rotation": "[0, 0, 63.380558013916016]",
+                                  "rotation": "[0, 0, 175.07164001464844]",
                                   "scaling": "[1.6000001430511475, 0.09999998658895493, 1]"
                                 },
                                 "Component": {

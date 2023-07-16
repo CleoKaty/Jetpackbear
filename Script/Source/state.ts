@@ -56,7 +56,6 @@ namespace Script {
               if(distancey < 0){
                 distancey *= -1;
               }
-              console.log(distancey);
                 if(distancey < 0.01){
                     console.log("attack");
                     _machine.transit(MODE.ATTACK);

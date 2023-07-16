@@ -5,16 +5,15 @@ namespace Script{
     export class Gamestate extends ƒ.Mutable{
         public points: number;
         public health: number;
-        public name: string;
+        private controller: ƒUi.Controller;
 
-        constructor(){
+        constructor(_config: {[key: string]: number}){
             super();
             this.points = 0;
-            this.health = 3;
-            this.name = "Jetpakbear";
+            this.health = _config.heart;
 
             let vui: HTMLDivElement = document.querySelector("div#vui");
-            new ƒUi.Controller(this, vui);
+            this.controller = new ƒUi.Controller(this,vui)
         }
         
 

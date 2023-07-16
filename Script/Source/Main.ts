@@ -6,7 +6,10 @@ namespace Script {
   //needed variables
   export let viewport: ƒ.Viewport;
   export let character: ƒ.Node;
+  export let gameState: Gamestate;
   let bear: ƒ.Node;
+  let fussel:ƒ.Node;
+  let hits: ƒ.Node;
   let life: number;
   let background: ƒ.Node;
   //let gravity: number;
@@ -29,14 +32,16 @@ namespace Script {
     console.log(keywords);
     life = 3;
 
-   
+   //vui
+   let gamestate: Gamestate = new Gamestate(config);
+   console.log(gamestate);
+
     //set up viewport
     viewport = (<CustomEvent>_event).detail;
     graph = <ƒ.Graph>viewport.getBranch();
+    viewport.physicsDebugMode = ƒ.PHYSICS_DEBUGMODE.COLLIDERS
 
-    //vui
-    let gamestate: Gamestate = new Gamestate();
-    console.log(gamestate);
+    
 
  
 
@@ -66,6 +71,8 @@ namespace Script {
     hurt();
     death();
     followCamera();
+    let cmpRigidbodyfussel: ƒ.ComponentRigidbody = fussel.getComponent(ƒ.ComponentRigidbody);
+    cmpRigidbodyfussel.addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, fusselCollides);
   }
 
   //functions
@@ -91,10 +98,15 @@ function hurt():void{
   if(falldeath() == true){
     life -=1;
   }
+ 
+  
+  
 }
 function setupChar(): void {
   // console.log(ƒ.Physics.settings.sleepingAngularVelocityThreshold);
   character = viewport.getBranch().getChildrenByName("Character")[0];
+  hits = viewport.getBranch().getChildrenByName("Hitables")[0];
+  fussel = hits.getChildrenByName("Enemy")[0];
   let cmpRigidbody: ƒ.ComponentRigidbody = character.getComponent(ƒ.ComponentRigidbody);
   cmpRigidbody.effectRotation = ƒ.Vector3.Y();
   //cmpRigidbody.addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, steveCollides);
@@ -102,7 +114,7 @@ function setupChar(): void {
 
 function falldeath():boolean{
   let death: boolean = false;
-  if (character.mtxWorld.translation.y <= -3){
+  if (character.mtxWorld.translation.y <= -3.5){
     death = true;
   }
   return death;
@@ -120,6 +132,16 @@ function followCamera() {
   viewport.camera.mtxPivot.mutate(
     { "translation": { "x": mutator.translation.x } }
   );
+}
+
+function fusselCollides(_event: ƒ.EventPhysics): void {
+  console.log("here");
+  let vctCollision: ƒ.Vector3 = ƒ.Vector3.DIFFERENCE(_event.collisionPoint, character.mtxWorld.translation);
+  let customEvent: CustomEvent = new CustomEvent("collide", { bubbles: true, detail: fussel.getChildrenByName("Fussel") })
+  if (Math.abs(vctCollision.x) <= 0 && Math.abs(vctCollision.z) < 0.1 && vctCollision.y < 0.1){ // collision next to fussel
+    console.log("hit");
+   fussel.dispatchEvent(customEvent);
+  }
 }
 
 //world

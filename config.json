@@ -1,5 +1,6 @@
 {
     "force":100,
+    "heart":3,
     "torgue":10,
     "ypush":0.6,
     "xpush":0.01,
