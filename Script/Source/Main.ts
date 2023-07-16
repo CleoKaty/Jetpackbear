@@ -15,6 +15,7 @@ namespace Script {
   //let gravity: number;
   let graph: ƒ.Graph;
   let cmpCamera: ƒ.ComponentCamera;
+  let cmpRigidbodyfussel: ƒ.ComponentRigidbody;
   
   let config: {[key: string]: number}; 
 
@@ -39,7 +40,6 @@ namespace Script {
     //set up viewport
     viewport = (<CustomEvent>_event).detail;
     graph = <ƒ.Graph>viewport.getBranch();
-    viewport.physicsDebugMode = ƒ.PHYSICS_DEBUGMODE.COLLIDERS;
 
     
 
@@ -55,6 +55,7 @@ namespace Script {
     //build world
     generateworld(config.worldlength);
     setupChar();
+    cmpRigidbodyfussel= fussel.getComponent(ƒ.ComponentRigidbody)
 
     //start loop
     ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
@@ -73,7 +74,6 @@ namespace Script {
     hurt();
     death();
     followCamera();
-    let cmpRigidbodyfussel: ƒ.ComponentRigidbody = fussel.getComponent(ƒ.ComponentRigidbody);
     cmpRigidbodyfussel.addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, fusselCollides);
   }
 

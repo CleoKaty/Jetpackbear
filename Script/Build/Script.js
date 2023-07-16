@@ -47,6 +47,7 @@ var Script;
     //let gravity: number;
     let graph;
     let cmpCamera;
+    let cmpRigidbodyfussel;
     let config;
     let keywords;
     (function (keywords) {
@@ -65,7 +66,6 @@ var Script;
         //set up viewport
         Script.viewport = _event.detail;
         graph = Script.viewport.getBranch();
-        Script.viewport.physicsDebugMode = ƒ.PHYSICS_DEBUGMODE.COLLIDERS;
         ƒ.AudioManager.default.listenWith(graph.getComponent(ƒ.ComponentAudioListener));
         ƒ.AudioManager.default.listenTo(graph);
         cmpCamera = graph.getComponent(ƒ.ComponentCamera);
@@ -73,6 +73,7 @@ var Script;
         //build world
         generateworld(config.worldlength);
         setupChar();
+        cmpRigidbodyfussel = Script.fussel.getComponent(ƒ.ComponentRigidbody);
         //start loop
         ƒ.Loop.addEventListener("loopFrame" /* ƒ.EVENT.LOOP_FRAME */, update);
         ƒ.Loop.start(); // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
@@ -86,7 +87,6 @@ var Script;
         hurt();
         death();
         followCamera();
-        let cmpRigidbodyfussel = Script.fussel.getComponent(ƒ.ComponentRigidbody);
         cmpRigidbodyfussel.addEventListener("ColliderEnteredCollision" /* ƒ.EVENT_PHYSICS.COLLISION_ENTER */, fusselCollides);
     }
     //functions
@@ -204,7 +204,7 @@ var Script;
         static iSubclass = ƒ.Component.registerSubclass(reset);
         // Properties may be mutated by users in the editor via the automatically created user interface
         message = "CustomComponentScript added to ";
-        attack = false;
+        attacktrue = false;
         constructor() {
             super();
             // Don't start when running in editor
@@ -237,13 +237,13 @@ var Script;
             if (!Script.character) {
                 return;
             }
-            if (this.attack == false) {
+            if (this.attacktrue == false) {
                 console.log("attackfalse");
                 this.node.mtxWorld.translation.x = Script.character.mtxWorld.translation.x - 4;
             }
         };
         fusselreset(_event) {
-            this.attack = false;
+            this.attacktrue = false;
             console.log("reset");
             let max = 6;
             let min = 0;
@@ -251,13 +251,13 @@ var Script;
             this.fusselfollow(randomnumber - 3);
         }
         hyia(_event) {
-            this.attack = true;
+            this.attacktrue = true;
             if (this.node.mtxWorld.translation.x >= Script.character.mtxWorld.translation.x + 5) {
                 this.fusselreset;
             }
         }
         fusselfollow(_randomnumber) {
-            if (this.attack == false) {
+            if (this.attacktrue == false) {
                 let positionVec = new ƒ.Vector3(Script.character.mtxWorld.translation.x - 4, _randomnumber, Script.character.mtxWorld.translation.z);
                 this.node.mtxWorld.translation = positionVec;
             }

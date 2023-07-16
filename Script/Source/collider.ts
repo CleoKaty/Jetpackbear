@@ -7,7 +7,7 @@ namespace Script {
     public static readonly iSubclass: number = ƒ.Component.registerSubclass(reset);
     // Properties may be mutated by users in the editor via the automatically created user interface
     public message: string = "CustomComponentScript added to ";
-    public attack: boolean = false;
+    public attacktrue: boolean = false;
 
 
     constructor() {
@@ -45,14 +45,14 @@ namespace Script {
       if (!character){
         return;
       }
-      if (this.attack == false){
+      if (this.attacktrue == false){
         console.log("attackfalse")
       this.node.mtxWorld.translation.x = character.mtxWorld.translation.x - 4;
       }
     }
 
     public fusselreset(_event: Event): void{
-      this.attack = false;
+      this.attacktrue = false;
       console.log("reset");
       let max: number = 6;
       let min: number = 0;
@@ -61,15 +61,15 @@ namespace Script {
       
     }
 
-    public hyia(_event: Event):void{
-      this.attack = true;
+    public hyia(_event: Event):void {
+      this.attacktrue = true;
       if (this.node.mtxWorld.translation.x >= character.mtxWorld.translation.x+5){
         this.fusselreset;
       }
     }
 
     public fusselfollow(_randomnumber: number): void{
-      if(this.attack == false){
+      if(this.attacktrue == false){
       let positionVec: ƒ.Vector3 = new ƒ.Vector3(character.mtxWorld.translation.x - 4, _randomnumber, character.mtxWorld.translation.z);
       this.node.mtxWorld.translation = positionVec;
       }
