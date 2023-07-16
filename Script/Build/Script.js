@@ -41,7 +41,6 @@ var Script;
     var ƒ = FudgeCore;
     ƒ.Debug.info("Main Program Template running!");
     let bear;
-    let fussel;
     let hits;
     let life;
     let background;
@@ -87,7 +86,7 @@ var Script;
         hurt();
         death();
         followCamera();
-        let cmpRigidbodyfussel = fussel.getComponent(ƒ.ComponentRigidbody);
+        let cmpRigidbodyfussel = Script.fussel.getComponent(ƒ.ComponentRigidbody);
         cmpRigidbodyfussel.addEventListener("ColliderEnteredCollision" /* ƒ.EVENT_PHYSICS.COLLISION_ENTER */, fusselCollides);
     }
     //functions
@@ -116,7 +115,7 @@ var Script;
         // console.log(ƒ.Physics.settings.sleepingAngularVelocityThreshold);
         Script.character = Script.viewport.getBranch().getChildrenByName("Character")[0];
         hits = Script.viewport.getBranch().getChildrenByName("Hitables")[0];
-        fussel = hits.getChildrenByName("Enemy")[0];
+        Script.fussel = hits.getChildrenByName("Enemy")[0];
         let cmpRigidbody = Script.character.getComponent(ƒ.ComponentRigidbody);
         cmpRigidbody.effectRotation = ƒ.Vector3.Y();
         //cmpRigidbody.addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, steveCollides);
@@ -143,10 +142,10 @@ var Script;
     function fusselCollides(_event) {
         console.log("here");
         let vctCollision = ƒ.Vector3.DIFFERENCE(_event.collisionPoint, Script.character.mtxWorld.translation);
-        let customEvent = new CustomEvent("collide", { bubbles: true, detail: fussel.getChildrenByName("Fussel") });
+        let customEvent = new CustomEvent("collide", { bubbles: true, detail: Script.fussel.getChildrenByName("Fussel") });
         if (Math.abs(vctCollision.x) <= 0 && Math.abs(vctCollision.z) < 0.1 && vctCollision.y < 0.1) { // collision next to fussel
             console.log("hit");
-            fussel.dispatchEvent(customEvent);
+            Script.fussel.dispatchEvent(customEvent);
         }
     }
     //world
@@ -200,11 +199,12 @@ var Script;
 (function (Script) {
     var ƒ = FudgeCore;
     ƒ.Project.registerScriptNamespace(Script); // Register the namespace to FUDGE for serialization
-    class collider extends ƒ.ComponentScript {
+    class reset extends ƒ.ComponentScript {
         // Register the script as component for use in the editor via drag&drop
-        static iSubclass = ƒ.Component.registerSubclass(Script.CustomComponentScript);
+        static iSubclass = ƒ.Component.registerSubclass(reset);
         // Properties may be mutated by users in the editor via the automatically created user interface
         message = "CustomComponentScript added to ";
+        attack = false;
         constructor() {
             super();
             // Don't start when running in editor
@@ -220,18 +220,50 @@ var Script;
             switch (_event.type) {
                 case "componentAdd" /* ƒ.EVENT.COMPONENT_ADD */:
                     ƒ.Debug.log(this.message, this.node);
+                    this.node.addEventListener("renderPrepare" /* ƒ.EVENT.RENDER_PREPARE */, this.update);
                     break;
                 case "componentRemove" /* ƒ.EVENT.COMPONENT_REMOVE */:
                     this.removeEventListener("componentAdd" /* ƒ.EVENT.COMPONENT_ADD */, this.hndEvent);
                     this.removeEventListener("componentRemove" /* ƒ.EVENT.COMPONENT_REMOVE */, this.hndEvent);
                     break;
                 case "nodeDeserialized" /* ƒ.EVENT.NODE_DESERIALIZED */:
+                    this.node.addEventListener("collide", this.fusselreset);
+                    this.node.addEventListener("attack", this.hyia);
                     // if deserialized the node is now fully reconstructed and access to all its components and children is possible
                     break;
             }
         };
+        update = (_event) => {
+            if (!Script.character) {
+                return;
+            }
+            if (this.attack == false) {
+                console.log("attackfalse");
+                this.node.mtxWorld.translation.x = Script.character.mtxWorld.translation.x - 4;
+            }
+        };
+        fusselreset(_event) {
+            this.attack = false;
+            console.log("reset");
+            let max = 6;
+            let min = 0;
+            let randomnumber = Math.random() * (max - min) + min;
+            this.fusselfollow(randomnumber - 3);
+        }
+        hyia(_event) {
+            this.attack = true;
+            if (this.node.mtxWorld.translation.x >= Script.character.mtxWorld.translation.x + 5) {
+                this.fusselreset;
+            }
+        }
+        fusselfollow(_randomnumber) {
+            if (this.attack == false) {
+                let positionVec = new ƒ.Vector3(Script.character.mtxWorld.translation.x - 4, _randomnumber, Script.character.mtxWorld.translation.z);
+                this.node.mtxWorld.translation = positionVec;
+            }
+        }
     }
-    Script.collider = collider;
+    Script.reset = reset;
 })(Script || (Script = {}));
 var Script;
 (function (Script) {
@@ -361,6 +393,8 @@ var Script;
             if (distancey < 0.01) {
                 console.log("attack");
                 _machine.transit(MODE.ATTACK);
+                let customEvent = new CustomEvent("attack", { bubbles: true });
+                Script.fussel.dispatchEvent(customEvent);
             }
         }
         static async actAttack(_machine) {

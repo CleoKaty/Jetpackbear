@@ -8,7 +8,7 @@ namespace Script {
   export let character: ƒ.Node;
   export let gameState: Gamestate;
   let bear: ƒ.Node;
-  let fussel:ƒ.Node;
+  export let fussel:ƒ.Node;
   let hits: ƒ.Node;
   let life: number;
   let background: ƒ.Node;
@@ -39,7 +39,7 @@ namespace Script {
     //set up viewport
     viewport = (<CustomEvent>_event).detail;
     graph = <ƒ.Graph>viewport.getBranch();
-    viewport.physicsDebugMode = ƒ.PHYSICS_DEBUGMODE.COLLIDERS
+    viewport.physicsDebugMode = ƒ.PHYSICS_DEBUGMODE.COLLIDERS;
 
     
 
@@ -66,6 +66,8 @@ namespace Script {
     ƒ.Physics.simulate();
     viewport.draw();
     ƒ.AudioManager.default.update();
+    
+
     
     fly();
     hurt();

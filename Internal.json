@@ -424,7 +424,7 @@
                           "clrPrimary": "[1, 1, 1, 1]",
                           "clrSecondary": "[1, 1, 1, 1]",
                           "pivot": {
-                            "translation": "[0.8201483488082886, 0.5012531280517578]",
+                            "translation": "[0.5420271754264832, 0.5012531280517578]",
                             "rotation": 0,
                             "scaling": "[0.17799752950668335, 0.4849624037742615]"
                           },
@@ -534,6 +534,14 @@
                           "active": true,
                           "stateCurrent": "IDLE",
                           "stateNext": "ATTACK"
+                        }
+                      }
+                    ],
+                    "reset": [
+                      {
+                        "Script.reset": {
+                          "active": true,
+                          "message": "CustomComponentScript added to "
                         }
                       }
                     ]
@@ -925,7 +933,7 @@
                               "ƒ.ComponentTransform": {
                                 "local": {
                                   "translation": "[7, 0, 0]",
-                                  "rotation": "[0, 0, 175.07164001464844]",
+                                  "rotation": "[0, 0, 7.814197540283203]",
                                   "scaling": "[1.6000001430511475, 0.09999998658895493, 1]"
                                 },
                                 "Component": {

@@ -59,6 +59,8 @@ namespace Script {
                 if(distancey < 0.01){
                     console.log("attack");
                     _machine.transit(MODE.ATTACK);
+                    let customEvent: CustomEvent = new CustomEvent("attack", { bubbles: true });
+                    fussel.dispatchEvent(customEvent);
                 }
             }
         
