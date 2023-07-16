@@ -40,6 +40,7 @@ namespace Script {
     //set up viewport
     viewport = (<CustomEvent>_event).detail;
     graph = <ƒ.Graph>viewport.getBranch();
+    viewport.physicsDebugMode = ƒ.PHYSICS_DEBUGMODE.COLLIDERS
 
     
 

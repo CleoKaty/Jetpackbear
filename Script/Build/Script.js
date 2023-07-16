@@ -66,6 +66,7 @@ var Script;
         //set up viewport
         Script.viewport = _event.detail;
         graph = Script.viewport.getBranch();
+        Script.viewport.physicsDebugMode = ƒ.PHYSICS_DEBUGMODE.COLLIDERS;
         ƒ.AudioManager.default.listenWith(graph.getComponent(ƒ.ComponentAudioListener));
         ƒ.AudioManager.default.listenTo(graph);
         cmpCamera = graph.getComponent(ƒ.ComponentCamera);
