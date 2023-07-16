@@ -28,7 +28,6 @@ namespace Script {
       switch (_event.type) {
         case ƒ.EVENT.COMPONENT_ADD:
           ƒ.Debug.log(this.message, this.node);
-          this.node.addEventListener(ƒ.EVENT.RENDER_PREPARE, this.update);
           break;
         case ƒ.EVENT.COMPONENT_REMOVE:
           this.removeEventListener(ƒ.EVENT.COMPONENT_ADD, this.hndEvent);
@@ -36,23 +35,13 @@ namespace Script {
           break;
         case ƒ.EVENT.NODE_DESERIALIZED:
           this.node.addEventListener("collide", this.fusselreset);
-          this.node.addEventListener("attack", this.hyia);
           // if deserialized the node is now fully reconstructed and access to all its components and children is possible
           break;
       }
     }
-    private update = (_event: Event): void => {
-      if (!character){
-        return;
-      }
-      if (this.attacktrue == false){
-        console.log("attackfalse")
-      this.node.mtxWorld.translation.x = character.mtxWorld.translation.x - 4;
-      }
-    }
+    
 
-    public fusselreset(_event: Event): void{
-      this.attacktrue = false;
+    public fusselreset = (_event: Event): void =>{
       console.log("reset");
       let max: number = 6;
       let min: number = 0;
@@ -61,18 +50,11 @@ namespace Script {
       
     }
 
-    public hyia(_event: Event):void {
-      this.attacktrue = true;
-      if (this.node.mtxWorld.translation.x >= character.mtxWorld.translation.x+5){
-        this.fusselreset;
-      }
-    }
+    public fusselfollow = (_randomnumber: number): void =>{
 
-    public fusselfollow(_randomnumber: number): void{
-      if(this.attacktrue == false){
       let positionVec: ƒ.Vector3 = new ƒ.Vector3(character.mtxWorld.translation.x - 4, _randomnumber, character.mtxWorld.translation.z);
       this.node.mtxWorld.translation = positionVec;
-      }
+
     }
 
     // protected reduceMutator(_mutator: ƒ.Mutator): void {

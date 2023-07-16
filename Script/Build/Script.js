@@ -220,7 +220,6 @@ var Script;
             switch (_event.type) {
                 case "componentAdd" /* ƒ.EVENT.COMPONENT_ADD */:
                     ƒ.Debug.log(this.message, this.node);
-                    this.node.addEventListener("renderPrepare" /* ƒ.EVENT.RENDER_PREPARE */, this.update);
                     break;
                 case "componentRemove" /* ƒ.EVENT.COMPONENT_REMOVE */:
                     this.removeEventListener("componentAdd" /* ƒ.EVENT.COMPONENT_ADD */, this.hndEvent);
@@ -228,40 +227,21 @@ var Script;
                     break;
                 case "nodeDeserialized" /* ƒ.EVENT.NODE_DESERIALIZED */:
                     this.node.addEventListener("collide", this.fusselreset);
-                    this.node.addEventListener("attack", this.hyia);
                     // if deserialized the node is now fully reconstructed and access to all its components and children is possible
                     break;
             }
         };
-        update = (_event) => {
-            if (!Script.character) {
-                return;
-            }
-            if (this.attacktrue == false) {
-                console.log("attackfalse");
-                this.node.mtxWorld.translation.x = Script.character.mtxWorld.translation.x - 4;
-            }
-        };
-        fusselreset(_event) {
-            this.attacktrue = false;
+        fusselreset = (_event) => {
             console.log("reset");
             let max = 6;
             let min = 0;
             let randomnumber = Math.random() * (max - min) + min;
             this.fusselfollow(randomnumber - 3);
-        }
-        hyia(_event) {
-            this.attacktrue = true;
-            if (this.node.mtxWorld.translation.x >= Script.character.mtxWorld.translation.x + 5) {
-                this.fusselreset;
-            }
-        }
-        fusselfollow(_randomnumber) {
-            if (this.attacktrue == false) {
-                let positionVec = new ƒ.Vector3(Script.character.mtxWorld.translation.x - 4, _randomnumber, Script.character.mtxWorld.translation.z);
-                this.node.mtxWorld.translation = positionVec;
-            }
-        }
+        };
+        fusselfollow = (_randomnumber) => {
+            let positionVec = new ƒ.Vector3(Script.character.mtxWorld.translation.x - 4, _randomnumber, Script.character.mtxWorld.translation.z);
+            this.node.mtxWorld.translation = positionVec;
+        };
     }
     Script.reset = reset;
 })(Script || (Script = {}));
@@ -395,6 +375,11 @@ var Script;
                 _machine.transit(MODE.ATTACK);
                 let customEvent = new CustomEvent("attack", { bubbles: true });
                 Script.fussel.dispatchEvent(customEvent);
+            }
+            else {
+                console.log("follow");
+                let cmpRigidbody = _machine.node.getComponent(ƒ.ComponentRigidbody);
+                cmpRigidbody.addVelocity(ƒ.Vector3.X(0.01));
             }
         }
         static async actAttack(_machine) {

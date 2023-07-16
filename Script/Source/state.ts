@@ -61,6 +61,10 @@ namespace Script {
                     _machine.transit(MODE.ATTACK);
                     let customEvent: CustomEvent = new CustomEvent("attack", { bubbles: true });
                     fussel.dispatchEvent(customEvent);
+                }else{
+                    console.log("follow");
+                    let cmpRigidbody: ƒ.ComponentRigidbody = _machine.node.getComponent(ƒ.ComponentRigidbody);
+                    cmpRigidbody.addVelocity(ƒ.Vector3.X(0.01));
                 }
             }
         
