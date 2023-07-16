@@ -72,7 +72,7 @@ var Script;
         cmpCamera = graph.getComponent(ƒ.ComponentCamera);
         Script.viewport.camera = cmpCamera;
         //build world
-        generateworld(config.worldlength);
+        // generateworld(config.worldlength);
         setupChar();
         cmpRigidbodyfussel = Script.fussel.getComponent(ƒ.ComponentRigidbody);
         cmpRigidbodyfussel.addEventListener("ColliderEnteredCollision" /* ƒ.EVENT_PHYSICS.COLLISION_ENTER */, fusselCollides);
@@ -85,33 +85,33 @@ var Script;
         ƒ.Physics.simulate();
         Script.viewport.draw();
         ƒ.AudioManager.default.update();
-        fly();
-        hurt();
-        death();
+        // fly();
+        // hurt();
+        // death();
         followCamera();
     }
     //functions
     function fly() {
         let cmpRigidbody = Script.character.getComponent(ƒ.ComponentRigidbody);
         cmpRigidbody.addVelocity(ƒ.Vector3.X(config.xpush));
-        if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.SPACE])) {
-            changeAnimation("fly");
-            cmpRigidbody.addVelocity(ƒ.Vector3.Y(config.ypush));
-        }
-        else {
-            changeAnimation("fall");
-        }
+        // if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.SPACE])) {
+        //   changeAnimation("fly");
+        //   cmpRigidbody.addVelocity(ƒ.Vector3.Y(config.ypush));
+        // }
+        // else{
+        //   changeAnimation("fall");
+        // }
     }
-    function death() {
-        if (life == 0) {
-            console.log("death");
-        }
-    }
-    function hurt() {
-        if (falldeath() == true) {
-            life -= 1;
-        }
-    }
+    // function death(){
+    //   if (life == 0){
+    //     console.log("death");
+    //   }
+    // }
+    // function hurt():void{
+    //   if(falldeath() == true){
+    //     life -=1;
+    //   }
+    // }
     function setupChar() {
         // console.log(ƒ.Physics.settings.sleepingAngularVelocityThreshold);
         Script.character = Script.viewport.getBranch().getChildrenByName("Character")[0];
@@ -121,21 +121,21 @@ var Script;
         cmpRigidbody.effectRotation = ƒ.Vector3.Y();
         //cmpRigidbody.addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, steveCollides);
     }
-    function falldeath() {
-        let death = false;
-        if (Script.character.mtxWorld.translation.y <= -3.5) {
-            death = true;
-        }
-        return death;
-    }
-    function changeAnimation(_animation) {
-        bear = Script.character.getChildrenByName("Bear")[0];
-        let currentAnim = bear.getComponent(ƒ.ComponentAnimator).animation;
-        const newAnim = ƒ.Project.getResourcesByName(_animation)[0];
-        if (currentAnim != newAnim) {
-            bear.getComponent(ƒ.ComponentAnimator).animation = newAnim;
-        }
-    }
+    // function falldeath():boolean{
+    //   let death: boolean = false;
+    //   if (character.mtxWorld.translation.y <= -3.5){
+    //     death = true;
+    //   }
+    //   return death;
+    // }
+    // function changeAnimation(_animation: string): void {
+    //   bear = character.getChildrenByName("Bear")[0];
+    //   let currentAnim: ƒ.AnimationSprite = bear.getComponent(ƒ.ComponentAnimator).animation as ƒ.AnimationSprite;
+    //   const newAnim: ƒ.AnimationSprite = ƒ.Project.getResourcesByName(_animation)[0] as ƒ.AnimationSprite;
+    //   if (currentAnim != newAnim) {
+    //     bear.getComponent(ƒ.ComponentAnimator).animation = newAnim;
+    //   }
+    // }
     function followCamera() {
         let mutator = Script.character.mtxLocal.getMutator();
         Script.viewport.camera.mtxPivot.mutate({ "translation": { "x": mutator.translation.x } });
@@ -149,32 +149,32 @@ var Script;
             Script.fussel.dispatchEvent(customEvent);
         }
     }
-    //world
-    function generateworld(_length) {
-        let xPos = 24;
-        let roomcount = 0;
-        for (let y = 0; y < _length; y++) {
-            createRoom(xPos, roomcount);
-            xPos += 20;
-            xPos += 1;
-        }
-    }
-    function createRoom(_xPos, _roomNumber) {
-        let upsi1 = new Script.upsi(_xPos);
-        let downsi1 = new Script.downsi(_xPos);
-        let left1 = new Script.left(_xPos);
-        let right1 = new Script.right(_xPos);
-        let picture1 = new Script.picture(_xPos, "room");
-        let room = new ƒ.Node("room");
-        background = Script.viewport.getBranch().getChildrenByName("Background")[0];
-        background.addChild(room);
-        let roomPlace = background.getChildrenByName("room")[_roomNumber];
-        roomPlace.addChild(upsi1);
-        roomPlace.addChild(downsi1);
-        roomPlace.addChild(left1);
-        roomPlace.addChild(right1);
-        roomPlace.addChild(picture1);
-    }
+    // //world
+    // function generateworld(_length: number):void{
+    //   let xPos:number = 24;
+    //   let roomcount: number = 0;
+    //   for (let y: number = 0; y < _length; y++) {
+    //         createRoom(xPos, roomcount);
+    //         xPos += 20;
+    //         xPos += 1;
+    //       }
+    // }
+    //     function createRoom(_xPos: number, _roomNumber: number): void {
+    //       let upsi1: upsi = new upsi(_xPos);
+    //       let downsi1: downsi = new downsi(_xPos);
+    //       let left1: left = new left(_xPos);
+    //       let right1: right = new right(_xPos);
+    //       let picture1: picture = new picture(_xPos, "room");
+    //       let room: ƒ.Node = new ƒ.Node("room");
+    //       background = viewport.getBranch().getChildrenByName("Background")[0];
+    //       background.addChild(room);
+    //       let roomPlace: ƒ.Node = background.getChildrenByName("room")[_roomNumber];
+    //       roomPlace.addChild(upsi1);
+    //       roomPlace.addChild(downsi1);
+    //       roomPlace.addChild(left1);
+    //       roomPlace.addChild(right1);
+    //       roomPlace.addChild(picture1);
+    //     }
 })(Script || (Script = {}));
 var Script;
 (function (Script) {
