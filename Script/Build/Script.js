@@ -165,6 +165,10 @@ var Script;
                     horrorlight();
                     bear.mtxLocal.scale(new ƒ.Vector3(0, 0, 0));
                     horrorbear.getComponent(ƒ.ComponentMaterial).activate(true);
+                    let uno = Script.fussel.getChildrenByName("fussel")[0];
+                    uno.getComponent(ƒ.ComponentMaterial).activate(false);
+                    let dos = Script.fussel.getChildrenByName("fusselhorror")[0];
+                    dos.getComponent(ƒ.ComponentMaterial).activate(true);
                 }
             }
         }
@@ -555,6 +559,7 @@ var Script;
             if (distancey < 0.01 && posx > posxf) {
                 // console.log("attack");
                 _machine.transit(MODE.ATTACK);
+                _machine.changeAnimation("attack", "horrorattack");
                 let customEvent = new CustomEvent("attack", { bubbles: true });
                 Script.fussel.dispatchEvent(customEvent);
             }
@@ -565,6 +570,7 @@ var Script;
                 }
                 let cmpRigidbody = _machine.node.getComponent(ƒ.ComponentRigidbody);
                 cmpRigidbody.addVelocity(ƒ.Vector3.X(0.01));
+                _machine.changeAnimation("wait", "horrorfollow");
             }
         }
         static async actAttack(_machine) {
@@ -598,6 +604,21 @@ var Script;
                     break;
             }
         };
+        changeAnimation(_animation, _animationH) {
+            let fusselan = this.node.getChildrenByName("fussel")[0];
+            let fusselanhorror = this.node.getChildrenByName("fusselhorror")[0];
+            let currentAnim = fusselan.getComponent(ƒ.ComponentAnimator).animation;
+            const newAnim = ƒ.Project.getResourcesByName(_animation)[0];
+            let currentAnimH = fusselanhorror.getComponent(ƒ.ComponentAnimator).animation;
+            const newAnimH = ƒ.Project.getResourcesByName(_animationH)[0];
+            if (currentAnim != newAnim) {
+                fusselan.getComponent(ƒ.ComponentAnimator).animation = newAnim;
+            }
+            if (currentAnimH != newAnimH) {
+                // console.log("i change");
+                fusselanhorror.getComponent(ƒ.ComponentAnimator).animation = newAnimH;
+            }
+        }
         update = (_event) => {
             this.act();
         };

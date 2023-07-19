@@ -470,7 +470,7 @@
                           "clrPrimary": "[1, 1, 1, 1]",
                           "clrSecondary": "[1, 1, 1, 1]",
                           "pivot": {
-                            "translation": "[0.8306551575660706, 0.003759398590773344]",
+                            "translation": "[0, 0.003759398590773344]",
                             "rotation": 0,
                             "scaling": "[0.15698392689228058, 0.4849624037742615]"
                           },
@@ -710,6 +710,63 @@
                                   "active": true
                                 },
                                 "idAnimation": "AnimationSprite|2023-07-15T13:20:33.065Z|98822",
+                                "playmode": "loop",
+                                "quantization": "discrete",
+                                "scale": 1,
+                                "scaleWithGameTime": true,
+                                "animateInEditor": false
+                              }
+                            }
+                          ]
+                        },
+                        "children": []
+                      }
+                    },
+                    {
+                      "ƒ.Node": {
+                        "name": "fusselhorror",
+                        "active": true,
+                        "components": {
+                          "ComponentMesh": [
+                            {
+                              "ƒ.ComponentMesh": {
+                                "idMesh": "MeshSprite|2023-05-27T10:07:05.502Z|82330",
+                                "pivot": {
+                                  "translation": "[0, 0, 0]",
+                                  "rotation": "[0, 0, 0]",
+                                  "scaling": "[1, 1, 1]"
+                                },
+                                "Component": {
+                                  "active": true
+                                }
+                              }
+                            }
+                          ],
+                          "ComponentMaterial": [
+                            {
+                              "ƒ.ComponentMaterial": {
+                                "sortForAlpha": false,
+                                "clrPrimary": "[1, 1, 1, 1]",
+                                "clrSecondary": "[1, 1, 1, 1]",
+                                "pivot": {
+                                  "translation": "[0, 0]",
+                                  "rotation": 0,
+                                  "scaling": "[0.11999992281198502, 0.4299998879432678]"
+                                },
+                                "Component": {
+                                  "active": false
+                                },
+                                "idMaterial": "Material|2023-07-19T13:45:28.166Z|52711"
+                              }
+                            }
+                          ],
+                          "ComponentAnimator": [
+                            {
+                              "ƒ.ComponentAnimator": {
+                                "Component": {
+                                  "active": true
+                                },
+                                "idAnimation": "AnimationSprite|2023-07-19T13:46:37.655Z|77456",
                                 "playmode": "loop",
                                 "quantization": "discrete",
                                 "scale": 1,
@@ -1051,7 +1108,7 @@
                               "ƒ.ComponentTransform": {
                                 "local": {
                                   "translation": "[7, 0, 0]",
-                                  "rotation": "[0, 0, 176.8380584716797]",
+                                  "rotation": "[0, 0, 156.04066467285156]",
                                   "scaling": "[1.6000001430511475, 0.09999998658895493, 1]"
                                 },
                                 "Component": {
@@ -1569,6 +1626,17 @@
       }
     }
   },
+  "TextureImage|2023-07-19T09:38:36.804Z|45159": {
+    "ƒ.TextureImage": {
+      "url": "Resoources\\gooreslump.jpg",
+      "type": "TextureImage",
+      "Texture": {
+        "idResource": "TextureImage|2023-07-19T09:38:36.804Z|45159",
+        "name": "Resoources\\gooreslump.jpg",
+        "mipmap": "CRISP"
+      }
+    }
+  },
   "TextureImage|2023-07-19T09:31:10.594Z|21843": {
     "ƒ.TextureImage": {
       "url": "Resoources\\goore.jpg",
@@ -1580,14 +1648,69 @@
       }
     }
   },
-  "TextureImage|2023-07-19T09:38:36.804Z|45159": {
+  "TextureImage|2023-07-19T13:45:19.397Z|16589": {
     "ƒ.TextureImage": {
-      "url": "Resoources\\gooreslump.jpg",
+      "url": "Resoources\\horrorfussel.png",
       "type": "TextureImage",
       "Texture": {
-        "idResource": "TextureImage|2023-07-19T09:38:36.804Z|45159",
-        "name": "Resoources\\gooreslump.jpg",
+        "idResource": "TextureImage|2023-07-19T13:45:19.397Z|16589",
+        "name": "Resoources\\horrorfussel.png",
         "mipmap": "CRISP"
+      }
+    }
+  },
+  "Material|2023-07-19T13:45:28.166Z|52711": {
+    "ƒ.Material": {
+      "name": "horrorfussel",
+      "idResource": "Material|2023-07-19T13:45:28.166Z|52711",
+      "shader": "ShaderFlatTextured",
+      "coat": {
+        "ƒ.CoatRemissiveTextured": {
+          "color": "[1, 1, 1, 1]",
+          "idTexture": "TextureImage|2023-07-19T13:45:19.397Z|16589",
+          "diffuse": 1,
+          "specular": 0
+        }
+      }
+    }
+  },
+  "AnimationSprite|2023-07-19T13:46:37.655Z|77456": {
+    "ƒ.AnimationSprite": {
+      "idResource": "AnimationSprite|2023-07-19T13:46:37.655Z|77456",
+      "idTexture": "TextureImage|2023-07-19T13:45:19.397Z|16589",
+      "frames": 4,
+      "wrapAfter": 5,
+      "start": "[0, 0]",
+      "size": "[130, 140]",
+      "next": "[306, 0]",
+      "wrap": "[0, 80]",
+      "Animation": {
+        "idResource": "AnimationSprite|2023-07-19T13:46:37.655Z|77456",
+        "name": "horrorfollow",
+        "labels": {},
+        "events": {},
+        "framesPerSecond": 3,
+        "animationStructure": {}
+      }
+    }
+  },
+  "AnimationSprite|2023-07-19T13:49:53.931Z|00825": {
+    "ƒ.AnimationSprite": {
+      "idResource": "AnimationSprite|2023-07-19T13:49:53.931Z|00825",
+      "idTexture": "TextureImage|2023-07-19T13:45:19.397Z|16589",
+      "frames": 4,
+      "wrapAfter": 5,
+      "start": "[0, 150]",
+      "size": "[125, 127]",
+      "next": "[308, 0]",
+      "wrap": "[0, 80]",
+      "Animation": {
+        "idResource": "AnimationSprite|2023-07-19T13:49:53.931Z|00825",
+        "name": "horrorattack",
+        "labels": {},
+        "events": {},
+        "framesPerSecond": 25,
+        "animationStructure": {}
       }
     }
   }

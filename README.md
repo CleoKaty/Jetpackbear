@@ -32,7 +32,7 @@
 ## Concept
 A Jetpack game, similar to flappy bird and Jetpack Joyride. The player has 3 lifes and an enemy who tries to constantly hit the player. The player has to navigate around obstacles, trying to miss the enemy while doing so. The score shows the user how far they came, before dying.
 
-Link to concept design: <[Design-pdf](https://github.com/CleoKaty/Jetpackbear/blob/8105b24642cfc16725379ec9ed31d3977fc68bd7/jetpackbearConceptdesign.pdf) 
+Link to concept design: [Design-pdf](https://github.com/CleoKaty/Jetpackbear/blob/8105b24642cfc16725379ec9ed31d3977fc68bd7/jetpackbearConceptdesign.pdf) 
 
 ## Links
 

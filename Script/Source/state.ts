@@ -61,6 +61,7 @@ namespace Script {
                 if(distancey < 0.01 && posx > posxf){
                     // console.log("attack");
                     _machine.transit(MODE.ATTACK);
+                    _machine.changeAnimation("attack","horrorattack");
                     let customEvent: CustomEvent = new CustomEvent("attack", { bubbles: true });
                     fussel.dispatchEvent(customEvent);
                 }else if(posx > posxf){
@@ -70,6 +71,7 @@ namespace Script {
                     }
                     let cmpRigidbody: ƒ.ComponentRigidbody = _machine.node.getComponent(ƒ.ComponentRigidbody);
                     cmpRigidbody.addVelocity(ƒ.Vector3.X(0.01));
+                    _machine.changeAnimation("wait","horrorfollow");
                 }
             }
         
@@ -104,6 +106,21 @@ namespace Script {
                   break;
               }
             }
+            private changeAnimation(_animation: string, _animationH: string): void {
+                let fusselan: ƒ.Node = this.node.getChildrenByName("fussel")[0];
+                let fusselanhorror: ƒ.Node = this.node.getChildrenByName("fusselhorror")[0];
+                let currentAnim: ƒ.AnimationSprite = fusselan.getComponent(ƒ.ComponentAnimator).animation as ƒ.AnimationSprite;
+                const newAnim: ƒ.AnimationSprite = ƒ.Project.getResourcesByName(_animation)[0] as ƒ.AnimationSprite;
+                let currentAnimH: ƒ.AnimationSprite = fusselanhorror.getComponent(ƒ.ComponentAnimator).animation as ƒ.AnimationSprite;
+                const newAnimH: ƒ.AnimationSprite = ƒ.Project.getResourcesByName(_animationH)[0] as ƒ.AnimationSprite;
+                if (currentAnim != newAnim) {
+                  fusselan.getComponent(ƒ.ComponentAnimator).animation = newAnim;
+                }
+                if (currentAnimH != newAnimH) {
+                  // console.log("i change");
+                  fusselanhorror.getComponent(ƒ.ComponentAnimator).animation = newAnimH;
+                }
+              }
         
             private update = (_event: Event): void => {
               this.act();

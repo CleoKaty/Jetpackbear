@@ -167,6 +167,10 @@ function fusselCollides(): void {
         horrorlight();
         bear.mtxLocal.scale(new ƒ.Vector3(0,0,0));
         horrorbear.getComponent(ƒ.ComponentMaterial).activate(true);
+        let uno: ƒ.Node = fussel.getChildrenByName("fussel")[0];
+        uno.getComponent(ƒ.ComponentMaterial).activate(false);
+        let dos:ƒ.Node = fussel.getChildrenByName("fusselhorror")[0];
+        dos.getComponent(ƒ.ComponentMaterial).activate(true);
         
       }
     }
