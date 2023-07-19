@@ -11,7 +11,7 @@ namespace Script {
           this.addComponent(new ƒ.ComponentMesh(walls.wallsmesh));
           
           let cmpMaterial: ƒ.ComponentMaterial = new ƒ.ComponentMaterial(walls.wallsmaterial);
-          cmpMaterial.clrPrimary = new ƒ.Color(165, 165, 165, 1);
+          cmpMaterial.clrPrimary = ƒ.Color.CSS("gray");
           this.addComponent(cmpMaterial);
           
              
@@ -86,6 +86,85 @@ namespace Script {
             let positionVector: ƒ.Vector3 = new ƒ.Vector3(_positionX, -0.36, -0.5);
             this.mtxLocal.translation = positionVector;
             this.mtxLocal.scale(new ƒ.Vector3(21, 7, 1));
+          }
+    }
+
+    export class obstacle extends ƒ.Node{
+        static mesh: ƒ.MeshCube = new ƒ.MeshCube("meshpic");
+        static mat: ƒ.Material;
+        constructor(_positionX: number) {
+            super("obstacle");
+          
+            this.addComponent(new ƒ.ComponentMesh(obstacle.mesh));       
+            this.addComponent(new ƒ.ComponentTransform());
+            let max: number = 4;
+            let min: number = 0;
+            let randomnumber: number = Math.random()* (max - min) + min;
+
+            let positionVector: ƒ.Vector3 = new ƒ.Vector3(_positionX, randomnumber-3, 0);
+            this.mtxLocal.translation = positionVector;
+            let rigid: ƒ.ComponentRigidbody = new ƒ.ComponentRigidbody(1,ƒ.BODY_TYPE.STATIC, ƒ.COLLIDER_TYPE.CUBE, ƒ.COLLISION_GROUP.DEFAULT);
+            this.addComponent(rigid);
+          }
+    }
+
+    export class kiste extends obstacle{
+        constructor(_positionX: number) {
+            super(_positionX);
+          
+            let cmpMaterial: ƒ.ComponentMaterial = new ƒ.ComponentMaterial(ƒ.Project.getResourcesByName("kiste")[0] as ƒ.Material);
+            this.addComponent(cmpMaterial);
+            
+          }
+    }
+    export class twist extends obstacle{
+        constructor(_positionX: number) {
+            super(_positionX);
+            this.getComponent(ƒ.ComponentRigidbody).typeBody = ƒ.BODY_TYPE.KINEMATIC;
+            let cmpMaterial: ƒ.ComponentMaterial = new ƒ.ComponentMaterial(ƒ.Project.getResourcesByName("wood")[0] as ƒ.Material);
+            let cmpAnimate: ƒ.ComponentAnimator = new ƒ.ComponentAnimator(ƒ.Project.getResourcesByName("turn")[0] as ƒ.Animation);
+            this.addComponent(cmpMaterial);
+            this.addComponent(cmpAnimate);
+            let max: number = 2;
+            let min: number = 1;
+            let randomnumber: number = Math.random()* (max - min) + min;
+            this.mtxLocal.scale(new ƒ.Vector3(randomnumber, 0.1, 1));
+            
+          }
+    }
+    export class spin extends obstacle{
+        constructor(_positionX: number) {
+            super(_positionX);
+            let cmpMaterial: ƒ.ComponentMaterial = new ƒ.ComponentMaterial(ƒ.Project.getResourcesByName("wood")[0] as ƒ.Material);
+            let dangle1: dangle = new dangle(_positionX);
+            this.addChild(dangle1);
+            let cmpJoint: ƒ.JointSpherical = new ƒ.JointSpherical(this.getComponent(ƒ.ComponentRigidbody), dangle1.getComponent(ƒ.ComponentRigidbody),);
+            
+            this.addComponent(cmpMaterial);
+            this.addComponent(cmpJoint);
+            let positionVector: ƒ.Vector3 = new ƒ.Vector3(_positionX, 1, 0);
+            this.mtxLocal.translation = positionVector;
+            this.mtxLocal.scale(new ƒ.Vector3(0.3, 0.3, 1));
+            
+          }
+    }
+    export class dangle extends obstacle{
+        constructor(_positionX: number) {
+            super(_positionX);
+            this.removeComponent(this.getComponent(ƒ.ComponentRigidbody));
+            let cmpMaterial: ƒ.ComponentMaterial = new ƒ.ComponentMaterial(ƒ.Project.getResourcesByName("wood")[0] as ƒ.Material);
+            this.addComponent(cmpMaterial);
+            let positionVector: ƒ.Vector3 = new ƒ.Vector3(0, -2.8, 0);
+            this.mtxLocal.translation = positionVector;
+            
+            let max: number = 4;
+            let min: number = 1;
+            let randomnumber: number = Math.random()* (max - min) + min;
+            this.mtxLocal.scale(new ƒ.Vector3(1, randomnumber, 1));
+   
+            let rigid: ƒ.ComponentRigidbody = new ƒ.ComponentRigidbody(1,ƒ.BODY_TYPE.DYNAMIC, ƒ.COLLIDER_TYPE.CUBE, ƒ.COLLISION_GROUP.DEFAULT);
+            this.addComponent(rigid);
+            
           }
     }
   }

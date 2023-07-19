@@ -59,24 +59,31 @@ namespace Script {
                 distancey *= -1;
               }
                 if(distancey < 0.01 && posx > posxf){
-                    console.log("attack");
+                    // console.log("attack");
                     _machine.transit(MODE.ATTACK);
                     let customEvent: CustomEvent = new CustomEvent("attack", { bubbles: true });
                     fussel.dispatchEvent(customEvent);
                 }else if(posx > posxf){
-                    console.log("follow");
+                    // console.log("follow");
+                    if(!_machine.node.getComponent(ƒ.ComponentRigidbody)){
+                        return;
+                    }
                     let cmpRigidbody: ƒ.ComponentRigidbody = _machine.node.getComponent(ƒ.ComponentRigidbody);
                     cmpRigidbody.addVelocity(ƒ.Vector3.X(0.01));
                 }
             }
         
             private static async actAttack(_machine: Fusselactions): Promise<void> {
+                if(!_machine.node.getComponent(ƒ.ComponentRigidbody)){
+                    return;
+                }
                 let cmpRigidbody: ƒ.ComponentRigidbody = _machine.node.getComponent(ƒ.ComponentRigidbody);
                 cmpRigidbody.addVelocity(ƒ.Vector3.X(0.05));
                 let distancebetween: number = _machine.node.mtxWorld.translation.x -character.mtxWorld.translation.x;
                 if(distancebetween >= 6){
                     _machine.transit(MODE.IDLE);
                     let customEvent: CustomEvent = new CustomEvent("far", { bubbles: true });
+                    console.log("far");
                     fussel.dispatchEvent(customEvent);
                 }
             }

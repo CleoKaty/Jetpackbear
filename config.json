@@ -1,8 +1,8 @@
 {
     "force":100,
-    "heart":3,
+    "heart":1,
     "torgue":10,
     "ypush":0.6,
     "xpush":0.01,
-    "worldlength": 10
+    "worldlength": 2
 }

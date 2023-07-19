@@ -7,15 +7,20 @@ namespace Script {
   export let viewport: ƒ.Viewport;
   export let character: ƒ.Node;
   export let gameState: Gamestate;
+  export let lightsource: ƒ.Node; 
   let bear: ƒ.Node;
+  let horrorbear: ƒ.Node;
   export let fussel:ƒ.Node;
   let hits: ƒ.Node;
-  let life: number;
   let background: ƒ.Node;
   //let gravity: number;
   let graph: ƒ.Graph;
   let cmpCamera: ƒ.ComponentCamera;
   let cmpRigidbodyfussel: ƒ.ComponentRigidbody;
+  let oppoTimer: number = 0;
+  let hitme: boolean;
+  let gamestate: Gamestate;
+  let roomcount: number;
   
   let config: {[key: string]: number}; 
 
@@ -31,16 +36,16 @@ namespace Script {
     let response = await fetch("config.json");
     config = await response.json();
     console.log(keywords);
-    life = 3;
+  
 
    //vui
-   let gamestate: Gamestate = new Gamestate(config);
-   console.log(gamestate);
+   gamestate = new Gamestate(config);
+   
 
     //set up viewport
     viewport = (<CustomEvent>_event).detail;
     graph = <ƒ.Graph>viewport.getBranch();
-    viewport.physicsDebugMode = ƒ.PHYSICS_DEBUGMODE.COLLIDERS
+    // viewport.physicsDebugMode = ƒ.PHYSICS_DEBUGMODE.COLLIDERS;
 
     
 
@@ -54,10 +59,13 @@ namespace Script {
     viewport.camera = cmpCamera;
 
     //build world
-    // generateworld(config.worldlength);
+    generateworld(config.worldlength);
     setupChar();
-    cmpRigidbodyfussel= fussel.getComponent(ƒ.ComponentRigidbody);
-    cmpRigidbodyfussel.addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, fusselCollides);
+    
+    hitme = false;
+    lightsource = character.getChildrenByName("Light")[0];
+
+  
 
     //start loop
     ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
@@ -72,10 +80,9 @@ namespace Script {
     
 
     
-    // fly();
-    // hurt();
-    // death();
+    fly();
     followCamera();
+    fusselCollides();
     
   }
 
@@ -84,28 +91,14 @@ namespace Script {
   function fly():void{
     let cmpRigidbody: ƒ.ComponentRigidbody = character.getComponent(ƒ.ComponentRigidbody);
     cmpRigidbody.addVelocity(ƒ.Vector3.X(config.xpush));
-    // if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.SPACE])) {
-    //   changeAnimation("fly");
-    //   cmpRigidbody.addVelocity(ƒ.Vector3.Y(config.ypush));
-    // }
-    // else{
-    //   changeAnimation("fall");
-    // }
+    if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.SPACE])) {
+      changeAnimation("fly", "horrorfly");
+      cmpRigidbody.addVelocity(ƒ.Vector3.Y(config.ypush));
+    }
+    else{
+      changeAnimation("fall", "horrorfall");
+    }
 }
-// function death(){
-//   if (life == 0){
-//     console.log("death");
-
-//   }
-// }
-// function hurt():void{
-//   if(falldeath() == true){
-//     life -=1;
-//   }
- 
-  
-  
-// }
 function setupChar(): void {
   // console.log(ƒ.Physics.settings.sleepingAngularVelocityThreshold);
   character = viewport.getBranch().getChildrenByName("Character")[0];
@@ -113,24 +106,25 @@ function setupChar(): void {
   fussel = hits.getChildrenByName("Enemy")[0];
   let cmpRigidbody: ƒ.ComponentRigidbody = character.getComponent(ƒ.ComponentRigidbody);
   cmpRigidbody.effectRotation = ƒ.Vector3.Y();
-  //cmpRigidbody.addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, steveCollides);
-}
+  gamestate.updatehealth();
+  bear = character.getChildrenByName("Bear")[0];
+  horrorbear = character.getChildrenByName("Horrorbear")[0];
 
-// function falldeath():boolean{
-//   let death: boolean = false;
-//   if (character.mtxWorld.translation.y <= -3.5){
-//     death = true;
-//   }
-//   return death;
-// }
-// function changeAnimation(_animation: string): void {
-//   bear = character.getChildrenByName("Bear")[0];
-//   let currentAnim: ƒ.AnimationSprite = bear.getComponent(ƒ.ComponentAnimator).animation as ƒ.AnimationSprite;
-//   const newAnim: ƒ.AnimationSprite = ƒ.Project.getResourcesByName(_animation)[0] as ƒ.AnimationSprite;
-//   if (currentAnim != newAnim) {
-//     bear.getComponent(ƒ.ComponentAnimator).animation = newAnim;
-//   }
-// }
+}
+function changeAnimation(_animation: string, _animationH: string): void {
+  
+  let currentAnim: ƒ.AnimationSprite = bear.getComponent(ƒ.ComponentAnimator).animation as ƒ.AnimationSprite;
+  const newAnim: ƒ.AnimationSprite = ƒ.Project.getResourcesByName(_animation)[0] as ƒ.AnimationSprite;
+  let currentAnimH: ƒ.AnimationSprite = horrorbear.getComponent(ƒ.ComponentAnimator).animation as ƒ.AnimationSprite;
+  const newAnimH: ƒ.AnimationSprite = ƒ.Project.getResourcesByName(_animationH)[0] as ƒ.AnimationSprite;
+  if (currentAnim != newAnim) {
+    bear.getComponent(ƒ.ComponentAnimator).animation = newAnim;
+  }
+  if (currentAnimH != newAnimH) {
+    // console.log("i change");
+    horrorbear.getComponent(ƒ.ComponentAnimator).animation = newAnimH;
+  }
+}
 function followCamera() {
   let mutator: ƒ.Mutator = character.mtxLocal.getMutator();
   viewport.camera.mtxPivot.mutate(
@@ -138,43 +132,138 @@ function followCamera() {
   );
 }
 
-function fusselCollides(_event: ƒ.EventPhysics): void {
-  console.log("here");
-  let vctCollision: ƒ.Vector3 = ƒ.Vector3.DIFFERENCE(_event.collisionPoint, character.mtxWorld.translation);
-  let customEvent: CustomEvent = new CustomEvent("collide", { bubbles: true, detail: fussel.getChildrenByName("Fussel") })
-  if (Math.abs(vctCollision.x) <= 0 && Math.abs(vctCollision.z) < 0.1 && vctCollision.y < 0.1){ // collision next to fussel
-    console.log("hit");
-   fussel.dispatchEvent(customEvent);
+function fusselCollides(): void {
+  cmpRigidbodyfussel= fussel.getComponent(ƒ.ComponentRigidbody);
+  let vctCollisionx: number = character.mtxWorld.translation.x - fussel.mtxWorld.translation.x ;
+  let vctCollisiony: number = character.mtxWorld.translation.y - fussel.mtxWorld.translation.y ;
+  if (vctCollisiony < 0){
+    vctCollisiony *= -1;
+  }
+  if (vctCollisionx < 0){
+    vctCollisionx *= -1;
+  }
+  // console.log(vctCollisionx)
+  if (vctCollisionx <= 0.6 && vctCollisiony <= 0.7 || vctCollisionx <= 0.8 && vctCollisiony <= 0.5){ // collision next to fussel
+    oppoTimer += ƒ.Loop.timeFrameGame/1000;
+    if (hitme == false){
+      oppoTimer= 0;
+      console.log("hit");
+      let customEvent: CustomEvent = new CustomEvent("collide", { bubbles: true, detail: fussel.getChildrenByName("Fussel") })
+      fussel.dispatchEvent(customEvent);
+      hitme = true;
+      console.log(hitme);
+      gamestate.health -= 1;
+      gamestate.updatehealth();
+      horrorworld();
+      
+      if(gamestate.health == 0){
+        // bear = character.getChildrenByName("Bear")[0];
+        // horrorbear = character.getChildrenByName("Horrorbear")[0];
+        let customEvent: CustomEvent = new CustomEvent("horror", { bubbles: true })
+        fussel.dispatchEvent(customEvent);
+        horrorlight();
+        bear.mtxLocal.scale(new ƒ.Vector3(0,0,0));
+        horrorbear.getComponent(ƒ.ComponentMaterial).activate(true);
+        
+      }
+    }
+  }
+  if (oppoTimer > 1){
+    console.log("tier");
+    hitme = false;
+    oppoTimer= 0;
+
+  
+  }
+  
+}
+
+
+
+//world
+function horrorlight():void{
+  console.log("changeligth");
+  let cmplight:ƒ.ComponentLight = lightsource.getComponent(ƒ.ComponentLight);
+  let colour:ƒ.Color= ƒ.Color.CSS("gray");
+   cmplight.light.color = colour;
+}
+
+function horrorworld(): void{
+  if(gamestate.health == 0){
+    for (let room = 0; room < roomcount; room++) {
+      let raumchange:ƒ.Node = viewport.getBranch().getChildrenByName("Background")[0].getChildrenByName("room")[room].getChildrenByName("picture")[0];
+      let cmpMaterial: ƒ.ComponentMaterial = raumchange.getComponent(ƒ.ComponentMaterial);
+      cmpMaterial.material = ƒ.Project.getResourcesByName("horrorroomtext")[0] as ƒ.Material;
+      console.log(viewport.getBranch().getChildrenByName("Background")[0].getChildrenByName("room")[room].getChildren());
+
+      let up: upsi = viewport.getBranch().getChildrenByName("Background")[0].getChildrenByName("room")[room].getChildrenByName("walls")[0];
+      let cmpMaterialup: ƒ.ComponentMaterial = up.getComponent(ƒ.ComponentMaterial);
+      cmpMaterialup.clrPrimary = ƒ.Color.CSS("DarkRed");
+
+      let down: downsi = viewport.getBranch().getChildrenByName("Background")[0].getChildrenByName("room")[room].getChildrenByName("walls")[1];
+      let cmpMaterialdown: ƒ.ComponentMaterial = down.getComponent(ƒ.ComponentMaterial);
+      cmpMaterialdown.clrPrimary = ƒ.Color.CSS("DarkRed");
+
+      for(let ob = 0; ob < 3; ob++){
+        let obstacle1: obstacle = viewport.getBranch().getChildrenByName("Background")[0].getChildrenByName("room")[room].getChildrenByName("obstacle")[ob];
+        obstacle1.removeComponent(obstacle1.getComponent(ƒ.ComponentMaterial));
+        let cmpMaterialob: ƒ.ComponentMaterial = new ƒ.ComponentMaterial(ƒ.Project.getResourcesByName("goore")[0] as ƒ.Material);
+        obstacle1.addComponent(cmpMaterialob);
+
+        if(ob == 2){
+          let dangli: dangle = obstacle1.getChildrenByName("obstacle")[0];
+          dangli.removeComponent(dangli.getComponent(ƒ.ComponentMaterial));
+          let cmpMaterialdan: ƒ.ComponentMaterial = new ƒ.ComponentMaterial(ƒ.Project.getResourcesByName("goore")[0] as ƒ.Material);
+          dangli.addComponent(cmpMaterialdan);
+        }
+      }
+      
+    }
   }
 }
 
-// //world
-// function generateworld(_length: number):void{
-//   let xPos:number = 24;
-//   let roomcount: number = 0;
-//   for (let y: number = 0; y < _length; y++) {
-//         createRoom(xPos, roomcount);
-//         xPos += 20;
-//         xPos += 1;
-//       }
-// }
+function generateworld(_length: number):void{
+  let xPos:number = 24;
+  roomcount = 0;
+  for (let y: number = 0; y < _length; y++) {
+        createRoom(xPos, roomcount);
+        xPos += 21;
+        roomcount += 1;
+      }
+}
 
-//     function createRoom(_xPos: number, _roomNumber: number): void {
-//       let upsi1: upsi = new upsi(_xPos);
-//       let downsi1: downsi = new downsi(_xPos);
-//       let left1: left = new left(_xPos);
-//       let right1: right = new right(_xPos);
-//       let picture1: picture = new picture(_xPos, "room");
-//       let room: ƒ.Node = new ƒ.Node("room");
-//       background = viewport.getBranch().getChildrenByName("Background")[0];
-//       background.addChild(room);
-//       let roomPlace: ƒ.Node = background.getChildrenByName("room")[_roomNumber];
-//       roomPlace.addChild(upsi1);
-//       roomPlace.addChild(downsi1);
-//       roomPlace.addChild(left1);
-//       roomPlace.addChild(right1);
-//       roomPlace.addChild(picture1);
-//     }
+
+    function createRoom(_xPos: number, _roomNumber: number): void {
+      let upsi1: upsi = new upsi(_xPos);
+      let downsi1: downsi = new downsi(_xPos);
+      let left1: left = new left(_xPos);
+      let right1: right = new right(_xPos);
+      let picture1: picture = new picture(_xPos, "room");
+
+      let max: number = _xPos + 10;
+      let min: number = _xPos - 10;
+      let randomnumberkiste: number = Math.random()* (max - min) + min;
+      let randomnumbertwist: number = Math.random()* (max - min) + min;
+      let randomnumberspin: number = Math.random()* (max - min) + min;
+
+      let kiste1: kiste = new kiste(randomnumberkiste);
+      let twist1: twist = new twist(randomnumbertwist);
+      let spin1: spin = new spin(randomnumberspin);
+
+      let room: ƒ.Node = new ƒ.Node("room");
+      background = viewport.getBranch().getChildrenByName("Background")[0];
+      background.addChild(room);
+      let roomPlace: ƒ.Node = background.getChildrenByName("room")[_roomNumber];
+      roomPlace.addChild(upsi1);
+      roomPlace.addChild(downsi1);
+      roomPlace.addChild(left1);
+      roomPlace.addChild(right1);
+      roomPlace.addChild(picture1);
+      roomPlace.addChild(kiste1);
+      roomPlace.addChild(twist1);
+      roomPlace.addChild(spin1);
+    
+    }
 
 }
 

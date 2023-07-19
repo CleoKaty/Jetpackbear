@@ -7,7 +7,7 @@ namespace Script {
     public static readonly iSubclass: number = ƒ.Component.registerSubclass(reset);
     // Properties may be mutated by users in the editor via the automatically created user interface
     public message: string = "CustomComponentScript added to ";
-    public attacktrue: boolean = false;
+    public gone: boolean = false;
 
 
     constructor() {
@@ -28,6 +28,7 @@ namespace Script {
       switch (_event.type) {
         case ƒ.EVENT.COMPONENT_ADD:
           ƒ.Debug.log(this.message, this.node);
+          this.node.addEventListener(ƒ.EVENT.RENDER_PREPARE, this.update);
           break;
         case ƒ.EVENT.COMPONENT_REMOVE:
           this.removeEventListener(ƒ.EVENT.COMPONENT_ADD, this.hndEvent);
@@ -40,6 +41,19 @@ namespace Script {
           break;
       }
     }
+
+    private update = (_event: Event): void => {
+      if(!character){
+        return;
+      }
+      let vctCollisionx: number = character.mtxWorld.translation.x - fussel.mtxWorld.translation.x ;
+      if (vctCollisionx > 3 && this.gone == true){
+        let rigid: ƒ.ComponentRigidbody = new ƒ.ComponentRigidbody(1,ƒ.BODY_TYPE.DYNAMIC, ƒ.COLLIDER_TYPE.CYLINDER, ƒ.COLLISION_GROUP.DEFAULT);
+        rigid.effectGravity = 0;
+        this.node.addComponent(rigid);
+        this.gone = false;
+        }
+    }
     
 
     public fusselreset = (_event: Event): void =>{
@@ -48,15 +62,21 @@ namespace Script {
       let min: number = 0;
       let randomnumber: number = Math.random()* (max - min) + min;
       let rigid: ƒ.ComponentRigidbody = this.node.getComponent(ƒ.ComponentRigidbody);
-      rigid.addVelocity(ƒ.Vector3.X(-5));
+      if(!rigid){
+        return;
+      }
+      this.node.removeComponent(rigid);
       this.fusselfollow(randomnumber-3);
+      this.gone = true;
       
     }
 
     public fusselfollow = (_randomnumber: number): void =>{
-
+      console.log("removed");
       let positionVec: ƒ.Vector3 = new ƒ.Vector3(character.mtxWorld.translation.x - 1, _randomnumber, 0);
       this.node.mtxWorld.translation = positionVec;
+      
+      
       
 
     }
