@@ -17,19 +17,19 @@ namespace Script{
         }
 
         public updatehealth():void {
-            console.log("minus");
             let lifebar: HTMLImageElement = document.querySelector("#img");
             if(this.health == 2){
-                console.log("two");
+                // console.log("two");
                 lifebar.setAttribute('src', 'Resoources/heart2.png');
             }
             if(this.health == 1){
                 lifebar.setAttribute('src', 'Resoources/heart1.png');
-                console.log("one");
+                // console.log("one");
             }
             if(this.health == 0){
                 lifebar.setAttribute('src', 'Resoources/horrorhearts.png');
-                console.log("zero");
+                document.getElementById("scorein").style.fontFamily = 'Frank';
+                // console.log("zero");
             }
         }
         

@@ -83,6 +83,9 @@ namespace Script {
     fly();
     followCamera();
     fusselCollides();
+    if(gamestate.health > 0){
+      gamestate.points = parseFloat((character.mtxLocal.translation.x*100).toFixed(1));
+    }
     
   }
 
