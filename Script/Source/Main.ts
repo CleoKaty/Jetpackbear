@@ -64,7 +64,6 @@ namespace Script {
     
     hitme = false;
     lightsource = character.getChildrenByName("Light")[0];
-    addAudioSound("happy.mp3");
 
   
 
@@ -153,9 +152,17 @@ function addAudio() {
 function addAudioSound(_audio: string) {
   const newAudio: ƒ.Audio = ƒ.Project.getResourcesByName(_audio)[0] as ƒ.Audio;
   // console.log(newAudio);
-  let audio:ƒ.ComponentAudio = character.getComponent(ƒ.ComponentAudio);
-  audio.setAudio(newAudio);
-  audio.play(true);
+ 
+
+  if(_audio=="horrormusic.mp3"){
+    let audio:ƒ.ComponentAudio = viewport.getBranch().getComponent(ƒ.ComponentAudio);
+    audio.setAudio(newAudio);
+    audio.play(true);
+  }else{
+    let audio:ƒ.ComponentAudio = character.getComponent(ƒ.ComponentAudio);
+    audio.setAudio(newAudio);
+    audio.play(true);
+  }
 }
 
 //collisiondetection
@@ -195,6 +202,7 @@ function fusselCollides(): void {
         uno.getComponent(ƒ.ComponentMaterial).activate(false);
         let dos:ƒ.Node = fussel.getChildrenByName("fusselhorror")[0];
         dos.getComponent(ƒ.ComponentMaterial).activate(true);
+
         addAudioSound("horrormusic.mp3");
         const newAudio: ƒ.Audio = ƒ.Project.getResourcesByName("ah.mp3")[0] as ƒ.Audio;
         let audio:ƒ.ComponentAudio = fussel.getComponent(ƒ.ComponentAudio);

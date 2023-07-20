@@ -78,7 +78,6 @@ var Script;
         setupChar();
         hitme = false;
         Script.lightsource = Script.character.getChildrenByName("Light")[0];
-        addAudioSound("happy.mp3");
         //start loop
         ƒ.Loop.addEventListener("loopFrame" /* ƒ.EVENT.LOOP_FRAME */, update);
         ƒ.Loop.start(); // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
@@ -148,9 +147,16 @@ var Script;
     function addAudioSound(_audio) {
         const newAudio = ƒ.Project.getResourcesByName(_audio)[0];
         // console.log(newAudio);
-        let audio = Script.character.getComponent(ƒ.ComponentAudio);
-        audio.setAudio(newAudio);
-        audio.play(true);
+        if (_audio == "horrormusic.mp3") {
+            let audio = Script.viewport.getBranch().getComponent(ƒ.ComponentAudio);
+            audio.setAudio(newAudio);
+            audio.play(true);
+        }
+        else {
+            let audio = Script.character.getComponent(ƒ.ComponentAudio);
+            audio.setAudio(newAudio);
+            audio.play(true);
+        }
     }
     //collisiondetection
     function fusselCollides() {
