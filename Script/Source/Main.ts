@@ -36,6 +36,7 @@ namespace Script {
     let response = await fetch("config.json");
     config = await response.json();
     console.log(keywords);
+    
   
 
    //vui
@@ -46,7 +47,6 @@ namespace Script {
     viewport = (<CustomEvent>_event).detail;
     graph = <ƒ.Graph>viewport.getBranch();
     // viewport.physicsDebugMode = ƒ.PHYSICS_DEBUGMODE.COLLIDERS;
-
     
 
  
@@ -64,6 +64,7 @@ namespace Script {
     
     hitme = false;
     lightsource = character.getChildrenByName("Light")[0];
+    addAudioSound("happy.mp3");
 
   
 
@@ -73,14 +74,14 @@ namespace Script {
   }
 
   function update(_event: Event): void {
-    // ƒ.Physics.simulate();  // if physics is included and used
     ƒ.Physics.simulate();
     viewport.draw();
-    ƒ.AudioManager.default.update();
+    // ƒ.AudioManager.default.update();
     
 
     
     fly();
+    addAudio();
     followCamera();
     fusselCollides();
     if(gamestate.health > 0){
@@ -97,9 +98,15 @@ namespace Script {
     if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.SPACE])) {
       changeAnimation("fly", "horrorfly");
       cmpRigidbody.addVelocity(ƒ.Vector3.Y(config.ypush));
+      let audio = character.getComponent(ƒ.ComponentAudio);
+      audio.play(true);
+
     }
     else{
       changeAnimation("fall", "horrorfall");
+      let audio = character.getComponent(ƒ.ComponentAudio);
+      audio.play(false);
+
     }
 }
 function setupChar(): void {
@@ -133,8 +140,25 @@ function followCamera() {
   viewport.camera.mtxPivot.mutate(
     { "translation": { "x": mutator.translation.x } }
   );
+  
 }
 
+//audiosetup
+function addAudio() {
+  let audioListener: ƒ.ComponentAudioListener = viewport.getBranch().getComponent(ƒ.ComponentAudioListener);
+  ƒ.AudioManager.default.listenWith(audioListener);
+  ƒ.AudioManager.default.listenTo(viewport.getBranch());
+
+}
+function addAudioSound(_audio: string) {
+  const newAudio: ƒ.Audio = ƒ.Project.getResourcesByName(_audio)[0] as ƒ.Audio;
+  // console.log(newAudio);
+  let audio:ƒ.ComponentAudio = character.getComponent(ƒ.ComponentAudio);
+  audio.setAudio(newAudio);
+  audio.play(true);
+}
+
+//collisiondetection
 function fusselCollides(): void {
   cmpRigidbodyfussel= fussel.getComponent(ƒ.ComponentRigidbody);
   let vctCollisionx: number = character.mtxWorld.translation.x - fussel.mtxWorld.translation.x ;
@@ -146,15 +170,15 @@ function fusselCollides(): void {
     vctCollisionx *= -1;
   }
   // console.log(vctCollisionx)
-  if (vctCollisionx <= 0.6 && vctCollisiony <= 0.7 || vctCollisionx <= 0.8 && vctCollisiony <= 0.5){ // collision next to fussel
+  if (vctCollisionx <= 0.6 && vctCollisiony <= 0.7 || vctCollisionx <= 0.8 && vctCollisiony <= 0.7){ // collision next to fussel
     oppoTimer += ƒ.Loop.timeFrameGame/1000;
     if (hitme == false){
       oppoTimer= 0;
-      console.log("hit");
+      // console.log("hit");
       let customEvent: CustomEvent = new CustomEvent("collide", { bubbles: true, detail: fussel.getChildrenByName("Fussel") })
       fussel.dispatchEvent(customEvent);
       hitme = true;
-      console.log(hitme);
+      // console.log(hitme);
       gamestate.health -= 1;
       gamestate.updatehealth();
       horrorworld();
@@ -171,6 +195,12 @@ function fusselCollides(): void {
         uno.getComponent(ƒ.ComponentMaterial).activate(false);
         let dos:ƒ.Node = fussel.getChildrenByName("fusselhorror")[0];
         dos.getComponent(ƒ.ComponentMaterial).activate(true);
+        addAudioSound("horrormusic.mp3");
+        const newAudio: ƒ.Audio = ƒ.Project.getResourcesByName("ah.mp3")[0] as ƒ.Audio;
+        let audio:ƒ.ComponentAudio = fussel.getComponent(ƒ.ComponentAudio);
+        audio.setAudio(newAudio);
+        audio.play(true);
+        audio.volume = 0.02;
         
       }
     }

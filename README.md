@@ -16,7 +16,7 @@
 |  3 | Editor              | I used the editor for creating materials an the basic structures in the internal and graph, so that I can generate the world itself per code.                                                               |
 |  4 | Scriptcomponents    | I used a Componentscript called collider.ts which helps me steer the Enemy without using to much Code. If I wanted to spawn more enemies, this would safe me time.                                                           |
 |  5 | Extend              | I used a lot of classes extending the Fudge-Node to create the components for the world, the room.                       |
-|  6 | Sound               | Use sounds and explain your choice of sounds and placement in respect to the user's perception.                                                 |
+|  6 | Sound               | I made the backgroundmusic myself. The graph plays the backgroundmusic, where the enemy has their own ComponentAudio too. The Source changes with the horrormode.                                               |
 |  7 | VUI                 | My virtual user interface consists of a health bar and a score board.                                            |
 |  8 | Event-System        | I used costumEvents for a collision between the enemy and the character for exapmple. It helps within the statemachine, triggering a new state. |
 |  9 | External Data       | I created a configfile, for the amount of hearts, the speed of the Character and manly for the world building itself, to controll its size quickly.                              |
@@ -31,6 +31,8 @@
 
 ## Concept
 A Jetpack game, similar to flappy bird and Jetpack Joyride. The player has 3 lifes and an enemy who tries to constantly hit the player. The player has to navigate around obstacles, trying to miss the enemy while doing so. The score shows the user how far they came, before dying.
+
+But everything is not as it seems... is it?
 
 Link to concept design: [Design-pdf](https://github.com/CleoKaty/Jetpackbear/blob/8105b24642cfc16725379ec9ed31d3977fc68bd7/jetpackbearConceptdesign.pdf) 
 
